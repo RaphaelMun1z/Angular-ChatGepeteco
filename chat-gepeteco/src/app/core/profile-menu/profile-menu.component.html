@@ -1,0 +1,20 @@
+<div class="p-4 border-t border-[var(--border-color)] relative">
+    <app-profile-menu (close)="isMenuOpen = false">
+    </app-profile-menu>
+    
+    <button (click)="toggleMenu()" 
+    class="w-full flex items-center gap-3 px-2 py-2 rounded-lg transition-colors text-sm hover:bg-[var(--bg-input)] text-[var(--text-primary)] group focus:outline-none focus:ring-2 focus:ring-brand-500/50" 
+    id="profile-btn">
+    
+    <img src="https://ui-avatars.com/api/?name=User+Name&background=random" 
+    alt="User Avatar" 
+    class="w-8 h-8 rounded-full border border-[var(--border-color)]">
+    
+    <div class="flex-1 text-left">
+        <div class="font-medium text-[var(--text-primary)]">Usuário</div>
+        <div class="text-xs text-[var(--text-secondary)]">Pro Plan</div>
+    </div>
+    
+    <i class="fa-solid fa-gear text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] group-hover:rotate-90 transition-all duration-300"></i>
+</button>
+</div>

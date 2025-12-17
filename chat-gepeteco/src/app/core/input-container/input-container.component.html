@@ -1,0 +1,31 @@
+<div class="relative bottom-0 left-0 w-full bg-gradient-to-t from-white via-white to-transparent dark:from-dark-bg dark:via-dark-bg dark:to-transparent">
+    <div class="max-w-3xl mx-auto">
+        <div class="relative flex gap-2 bg-gray-100 dark:bg-dark-surface p-2 rounded-3xl border border-transparent focus-within:border-gray-300 dark:focus-within:border-gray-600 shadow-sm transition-all items-center">
+            
+            <button class="btn-round p-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                <i class="fa-solid fa-paperclip"></i>
+            </button>
+            
+            <textarea 
+            #chatInput
+            [(ngModel)]="userInput"
+            (input)="autoResize()"
+            (keydown)="handleEnter($event)"
+            rows="1" 
+            placeholder="Digite uma mensagem..." 
+            class="w-full bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-500 resize-none py-3 max-h-48 overflow-y-auto focus:outline-none"
+            ></textarea>
+            
+            <button (click)="send()" 
+            [disabled]="!userInput.trim()" 
+            [class.bg-brand-600]="userInput.trim()" 
+            [class.text-white]="userInput.trim()"
+            class="btn-round p-3 mb-1 bg-gray-300 dark:bg-gray-700 text-gray-500 rounded-full transition-all duration-200 disabled:opacity-50 hover:bg-brand-500">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </div>
+    <div class="text-center mt-2">
+        <p class="text-xs text-gray-400 dark:text-gray-500">A IA pode cometer erros.</p>
+    </div>
+</div>
+</div>

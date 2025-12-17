@@ -1,121 +1,64 @@
 @import "tailwindcss";
-@use 'tooltip.scss';
 
-@layer reset, primeng, base, components, utilities;
+@custom-variant dark (&:where(.dark, .dark *));
+@layer reset, base, components, utilities;
 
-/* --- CONFIGURAÇÃO TAILWIND v4 --- */
+/* --- CONFIGURAÇÃO DO SEU TEMA --- */
 @theme {
-    /* -- Suas Cores Originais -- */
+    /* Suas fontes */
     --font-sans: 'Inter', sans-serif;
-    --color-custom-gray: #e5e7eb;
     
-    --color-academic-primary: #4f46e5;
-    --color-academic-secondary: #6366f1;
-    --color-academic-light: #a5b4fc;
-    --color-academic-dark: #4338ca;
-    --color-academic-success: #10b981;
-    --color-academic-warning: #f59e0b;
-    --color-academic-danger: #ef4444;
-    
-    /* -- CHATBOT: Cores da Marca (Brand) -- */
+    /* Suas cores personalizadas */
     --color-brand-100: #dbeafe;
     --color-brand-400: #60a5fa;
     --color-brand-500: #3b82f6;
     --color-brand-600: #2563eb;
     --color-brand-900: #1e3a8a;
     
-    /* -- CHATBOT: Cores do Modo Escuro (Dark Mode) -- */
+    /* Cores do modo escuro (suas variáveis) */
     --color-dark-bg: #131314;
     --color-dark-surface: #1E1F20;
     --color-dark-input: #282a2c;
     --color-dark-modal: #2d2e30;
     
-    /* -- CHATBOT: Animações Customizadas -- */
+    /* Animações */
     --animate-fade-in: fadeIn 0.2s ease-out forwards;
-    --animate-scale-up: scaleUp 0.2s ease-out forwards;
     --animate-slide-up: slideUp 0.4s ease-out forwards;
     --animate-typing: typingBounce 1.4s infinite ease-in-out both;
 }
 
-/* --- KEYFRAMES (Necessários para as animações acima) --- */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes scaleUp {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes typingBounce {
-    0%, 80%, 100% { transform: scale(0); }
-    40% { transform: scale(1); }
-}
-
-/* --- SEUS ESTILOS GLOBAIS --- */
-.mat-icon.fa,
-.mat-icon.fab {
-    font-size: 20px;
-    vertical-align: middle;
-}
-
-/* Ajuste específico para as bolinhas da animação de digitação */
-.typing-dot:nth-child(1) { animation-delay: -0.32s; }
-.typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
+/* --- ESTILOS GLOBAIS (BASE) --- */
 @layer base {
-    @supports (not (-webkit-appearance: -apple-pay-button)) or (contain-intrinsic-size: 1px) {
-        ::placeholder {
-            color: #9ca3af;
-        }
+    /* Garante que o fundo da página mude de cor */
+    body {
+        background-color: #ffffff; /* Fundo claro padrão */
+        color: #1f2937;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
     
-    select { background-color: revert; }
-    input { background-color: #fff; }
-}
-
-@layer utilities {
-    .shadow-sm {
-        --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-        --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
-        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    /* Quando tiver a classe .dark, usa sua cor personalizada */
+    .dark body {
+        background-color: var(--color-dark-bg);
+        color: #e5e7eb;
+    }
+    
+    /* Ajuste para inputs ficarem escuros automaticamente */
+    .dark input, 
+    .dark textarea,
+    .dark select {
+        background-color: var(--color-dark-input);
+        color: #ffffff;
+        border-color: #4b5563;
     }
 }
 
-/* --- SCROLLBAR CUSTOMIZADA --- */
-::-webkit-scrollbar-corner { background: rgba(0,0,0,0.5); }
+/* --- KEYFRAMES --- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes typingBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-* {
-    /* Define cores padrão caso as variáveis não existam no contexto */
-    --scroll-bar-color: #cbd5e1;
-    --scroll-bar-bg-color: transparent;
-    
-    scrollbar-width: thin;
-    scrollbar-color: var(--scroll-bar-color) var(--scroll-bar-bg-color);
-}
-
-/* Dark mode overrides para scrollbar */
-.dark * {
-    --scroll-bar-color: #4b5563;
-}
-
-*::-webkit-scrollbar {
-    width: 8px; /* Ajustei para ficar mais elegante no chat */
-    height: 8px;
-}
-
-*::-webkit-scrollbar-track {
-    background: var(--scroll-bar-bg-color);
-}
-
-*::-webkit-scrollbar-thumb {
-    background-color: var(--scroll-bar-color);
-    border-radius: 20px;
-    /* border: 3px solid var(--scroll-bar-bg-color); */ /* Removi a borda grossa para ficar mais clean */
-}
+/* --- SCROLLBAR --- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+.dark ::-webkit-scrollbar-thumb { background-color: #4b5563; }
