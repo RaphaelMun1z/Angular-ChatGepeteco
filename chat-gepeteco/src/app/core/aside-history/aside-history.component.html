@@ -1,61 +1,71 @@
-<aside [class.-translate-x-full]="!isSidebarOpen" 
-class="inset-y-0 left-0 z-50 bg-[#1e1f20] text-[#e3e3e3] md:translate-x-0 transition-transform duration-300 flex flex-col border-r border-transparent font-sans">
+<aside 
+[class.-translate-x-full]="uiService.isSidebarOpen()" 
+[class.w-72]="!uiService.isSidebarOpen()"
+[class.w-[68px]]="uiService.isSidebarOpen()"
+class="fixed inset-y-0 left-0 z-50 bg-[#1e1f20] text-[#e3e3e3] md:translate-x-0 transition-all duration-300 flex flex-col border-r border-transparent font-sans overflow-hidden">
 
-<div class="px-4 py-3 flex justify-between items-center mt-1">
-    <button (click)="toggleSb()" class="btn-i p-2 -ml-2 hover:bg-[#333537] rounded-full transition-colors text-gray-300">
-        <i class="fa-solid fa-bars"></i>
-    </button>
-    <button class="btn-i p-2 -mr-2 hover:bg-[#333537] rounded-full transition-colors text-gray-300" title="Pesquisar">
-        <i class="fa-solid fa-magnifying-glass"></i>
-    </button>
+<div class="px-4 py-3 flex items-center mt-1 h-[60px]"
+[class.justify-between]="!uiService.isSidebarOpen()"
+[class.justify-center]="uiService.isSidebarOpen()">
+
+<button (click)="toggleMenu()" class="btn-i p-2 hover:bg-[#333537] rounded-full transition-colors text-gray-300 shrink-0 -ml-2">
+    <i class="fa-solid fa-bars text-xl icon-top-aside"></i>
+</button>
+
+<button [class.hidden]="uiService.isSidebarOpen()" class="btn-i p-2 -mr-2 hover:bg-[#333537] rounded-full transition-colors text-gray-300" title="Pesquisar">
+    <i class="fa-solid fa-magnifying-glass icon-top-aside"></i>
+</button>
 </div>
 
-<div class="px-4 pb-2 flex items-center gap-2">
-    <button [routerLink]="'/'" class="nova-conv flex-1 flex items-center gap-3 px-4 py-3 bg-[#1a1c1e] hover:bg-[#333537] rounded-full transition-colors text-sm font-medium border-none shadow-sm text-gray-200">
-        <i class="fa-regular fa-pen-to-square text-gray-400 text-lg"></i>
-        <span>Nova conversa</span>
-    </button>
-    
-    <button class="p-3 bg-transparent hover:bg-[#333537] rounded-full transition-colors text-gray-400 hover:text-gray-200 border-none relative group icon-conv-temp" title="Conversa momentânea">
-        <i class="fa-regular fa-message"></i>
-    </button>
+<div class="px-4 pb-2 flex items-center gap-2 transition-all duration-300"
+[class.px-2]="uiService.isSidebarOpen()"
+[class.justify-center]="uiService.isSidebarOpen()">
+
+<button [routerLink]="'/'" 
+class="nova-conv flex items-center gap-3 bg-[#1a1c1e] hover:bg-[#333537] rounded-full transition-all duration-300 text-sm font-medium border-none shadow-sm text-gray-200 h-[44px] shrink-0"
+[class.flex-1]="!uiService.isSidebarOpen()"
+[class.px-4]="!uiService.isSidebarOpen()"
+[class.py-3]="!uiService.isSidebarOpen()"
+[class.w-[44px]]="uiService.isSidebarOpen()"
+[class.justify-center]="uiService.isSidebarOpen()"
+[class.px-0]="uiService.isSidebarOpen()">
+
+<i class="fa-regular fa-pen-to-square text-gray-400 text-lg"></i>
+<span [class.hidden]="uiService.isSidebarOpen()" class="whitespace-nowrap">Nova conversa</span>
+</button>
+
+<button class="p-3 bg-transparent hover:bg-[#333537] rounded-full transition-colors text-gray-400 hover:text-gray-200 border-none relative group icon-conv-temp shrink-0" 
+title="Conversa momentânea"
+[class.hidden]="uiService.isSidebarOpen()">
+<i class="fa-regular fa-message"></i>
+</button>
 </div>
 
-<div class="flex-1 overflow-y-auto px-4 space-y-6 mt-4 no-scrollbar">
+<div class="flex-1 overflow-y-auto px-4 space-y-6 mt-4 no-scrollbar overflow-x-hidden">
     
-    <section>
+    <section [class.hidden]="uiService.isSidebarOpen()">
         <div class="flex justify-between items-center mb-3 group cursor-pointer hover:bg-[#333537] py-1 px-2 rounded-lg -ml-2 transition-colors mi-area">
             <span class="mi-btn text-xs font-medium text-gray-400 group-hover:text-gray-200 uppercase tracking-wider">Meus itens</span>
             <i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-gray-300"></i>
         </div>
         
         <div class="flex justify-between w-full pb-2 gap-2">
-            
-            <div class="w-[85px] bg-[rgb(14,14,14)] h-[85px] bg-[#1e1f20] rounded-2xl p-3 flex flex-col justify-between hover:bg-[#333537] cursor-pointer transition-colors group shrink-0">
+            <div class="w-[85px] bg-[rgb(14,14,14)] h-[85px] rounded-2xl p-3 flex flex-col justify-between hover:bg-[#333537] cursor-pointer transition-colors group shrink-0 border border-[#444746]">
                 <span class="text-[11px] font-medium text-gray-200 leading-tight line-clamp-3 group-hover:text-white break-words">Doc. do Projeto</span>
-                <div class="flex justify-end">
-                    <i class="fa-regular fa-file-lines text-blue-400 text-xs"></i>
-                </div>
+                <div class="flex justify-end"><i class="fa-regular fa-file-lines text-blue-400 text-xs"></i></div>
             </div>
-            
-            <div class="w-[85px] bg-[rgb(14,14,14)] h-[85px] bg-[#1e1f20] rounded-2xl p-3 flex flex-col justify-between hover:bg-[#333537] cursor-pointer transition-colors group shrink-0">
+            <div class="w-[85px] bg-[rgb(14,14,14)] h-[85px] rounded-2xl p-3 flex flex-col justify-between hover:bg-[#333537] cursor-pointer transition-colors group shrink-0 border border-[#444746]">
                 <span class="text-[11px] font-medium text-gray-200 leading-tight line-clamp-3 group-hover:text-white break-words">Ativ. Prática...</span>
-                <div class="flex justify-end">
-                    <i class="fa-solid fa-code text-green-400 text-xs"></i>
-                </div>
+                <div class="flex justify-end"><i class="fa-solid fa-code text-green-400 text-xs"></i></div>
             </div>
-            
-            <div class="w-[85px] bg-[rgb(14,14,14)] h-[85px] bg-[#1e1f20] rounded-2xl p-3 flex flex-col justify-between hover:bg-[#333537] cursor-pointer transition-colors group shrink-0">
+            <div class="w-[85px] bg-[rgb(14,14,14)] h-[85px] rounded-2xl p-3 flex flex-col justify-between hover:bg-[#333537] cursor-pointer transition-colors group shrink-0 border border-[#444746]">
                 <span class="text-[11px] font-medium text-gray-200 leading-tight line-clamp-3 group-hover:text-white break-words">Algoritmo Prim</span>
-                <div class="flex justify-end">
-                    <i class="fa-solid fa-code text-green-400 text-xs"></i>
-                </div>
+                <div class="flex justify-end"><i class="fa-solid fa-code text-green-400 text-xs"></i></div>
             </div>
-            
         </div>
     </section>
     
-    <section>
+    <section [class.hidden]="uiService.isSidebarOpen()">
         <div class="flex justify-between items-center mb-1 group cursor-pointer hover:bg-[#333537] py-1 px-2 rounded-lg -ml-2 transition-colors">
             <span class="text-xs font-medium text-gray-400 group-hover:text-gray-200 uppercase tracking-wider">Gems</span>
             <i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-gray-300"></i>
@@ -66,31 +76,37 @@ class="inset-y-0 left-0 z-50 bg-[#1e1f20] text-[#e3e3e3] md:translate-x-0 transi
         </button>
     </section>
     
-    <section>
+    <section [class.hidden]="uiService.isSidebarOpen()">
         <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2 px-2">Conversas</div>
         <div class="space-y-1">
-            <button class="w-full flex justify-between items-center px-3 py-2 rounded-full hover:bg-[#333537] text-left text-sm text-gray-200 group transition-colors">
-                <span class="truncate pr-2">Planejamento Projeto EDII</span>
-                <i class="fa-solid fa-thumbtack text-[10px] text-gray-500 opacity-100"></i>
-            </button>
-            
-            <button class="w-full flex justify-between items-center px-3 py-2 rounded-full bg-[#004a77] text-left text-sm text-[#c2e7ff] font-medium group transition-colors">
-                <span class="truncate pr-2">Modificação do Aside</span>
-                <i class="fa-solid fa-ellipsis-vertical text-xs opacity-0 group-hover:opacity-100"></i>
-            </button>
-            
-            <button class="w-full flex justify-between items-center px-3 py-2 rounded-full hover:bg-[#333537] text-left text-sm text-gray-200 group transition-colors">
-                <span class="truncate pr-2">Scrapy Spider para Vagas</span>
-                <i class="fa-solid fa-ellipsis-vertical text-xs opacity-0 group-hover:opacity-100 text-gray-400"></i>
-            </button>
+            <app-conversation-item 
+            *ngFor="let chat of chatHistory"
+            [title]="chat.title"
+            [route]="chat.route"
+            [isPinned]="chat.isPinned"
+            [routerLink]="chat.route"
+            routerLinkActive
+            #rla="routerLinkActive"
+            [isActive]="rla.isActive" 
+            [isCollapsed]="uiService.isSidebarOpen()"></app-conversation-item>
         </div>
     </section>
 </div>
 
-<div class="p-4 mt-auto border-t border-transparent">
+<div class="p-4 mt-auto border-t border-transparent flex flex-col" 
+[class.items-center]="uiService.isSidebarOpen()"
+[class.justify-center]="uiService.isSidebarOpen()">
+
+<div [class.hidden]="uiService.isSidebarOpen()" class="w-full">
     <app-profile-menu></app-profile-menu>
+</div>
+
+<button [class.hidden]="!uiService.isSidebarOpen()" class="w-[44px] h-[44px] flex items-center justify-center hover:bg-[#333537] rounded-full transition-colors text-gray-300" title="Configurações">
+    <i class="fa-solid fa-gear text-xl"></i>
+</button>
+
 </div>
 
 </aside>
 
-<div *ngIf="isSidebarOpen" (click)="toggleSb()" class="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm transition-opacity"></div>
+<div *ngIf="uiService.isSidebarOpen()" (click)="toggleSb()" class="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm transition-opacity"></div>

@@ -8,7 +8,7 @@ export class UiService {
     isSettingsOpen = signal(false);
     isSidebarOpen = signal(false);
     isProfileSettingsModalOpen = signal(false);
-    
+
     toggleSettings() {
         this.isSettingsOpen.update(val => !val);
     }

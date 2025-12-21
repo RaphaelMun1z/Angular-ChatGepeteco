@@ -1,0 +1,22 @@
+<button [routerLink]="route"
+   class="w-full flex items-center gap-3 py-2 rounded-full text-sm group transition-colors h-[40px] shrink-0"
+   [ngClass]="isActive ? 'bg-[#004a77] text-[#c2e7ff] font-medium' : 'hover:bg-[#333537] text-gray-200'"
+   [class.px-3]="!isCollapsed"
+   [class.justify-center]="isCollapsed"
+   [class.justify-between]="!isCollapsed">
+
+   <div class="flex items-center gap-3 overflow-hidden">
+       <i *ngIf="isCollapsed" class="fa-regular fa-message" 
+          [ngClass]="isActive ? 'text-[#c2e7ff]' : 'text-gray-400'"></i>
+       
+       <span *ngIf="!isCollapsed" class="truncate pr-2">{{ title }}</span>
+   </div>
+
+   <ng-container *ngIf="!isCollapsed">
+        <i *ngIf="isPinned" class="fa-solid fa-thumbtack text-[10px] text-gray-500 opacity-100 shrink-0"></i>
+
+        <i *ngIf="!isPinned" class="fa-solid fa-ellipsis-vertical text-xs opacity-0 group-hover:opacity-100 shrink-0"
+           [class.text-gray-400]="!isActive"></i>
+   </ng-container>
+
+</button>
