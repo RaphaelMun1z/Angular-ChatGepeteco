@@ -1,7 +1,5 @@
-<div class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth pb-32 bg-white dark:bg-dark-bg transition-colors duration-300">
-    <app-no-msg-view *ngIf="(hasMessages$ | async) === false"></app-no-msg-view>
-    
+<div class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth pb-32 bg-white dark:bg-dark-bg transition-colors duration-300">    
     <app-msg-container-view *ngFor="let msg of messages$ | async" [message]="msg"></app-msg-container-view>
-
+    
     <app-msg-loading *ngIf="isLoading$ | async"></app-msg-loading>
 </div>
