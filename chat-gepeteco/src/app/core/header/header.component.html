@@ -10,7 +10,7 @@
     </button>
     
     <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-1.5 rounded-lg transition-colors group">
-        <span class="font-semibold text-lg text-gray-700 dark:text-gray-200">
+        <span class="font-semibold text-lg text-gray-700 dark:text-gray-200 chat-nome">
             Chat Gepeteco
         </span>
         <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-100 text-brand-600 px-2 py-0.5 rounded-full dark:bg-brand-500/10 dark:text-brand-400 border border-brand-200 dark:border-brand-500/20">
@@ -20,6 +20,10 @@
 </div>
 
 <div class="flex items-center">
+    <button 
+    class="w-10 h-10 cursor-pointer rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all" title="Arquivos">
+        <i class="fa-solid fa-box-archive"></i>
+    </button>
     <button 
     (click)="toggleSt()" 
     class="w-10 h-10 cursor-pointer rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all" title="Configurações">

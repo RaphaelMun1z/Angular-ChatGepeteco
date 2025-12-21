@@ -1,0 +1,46 @@
+:host{
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 16vw;
+}
+
+aside{
+    position: relative;
+    width: 100%;
+}
+
+.icon-conv-temp{
+    border: 1px solid rgb(68, 71, 70);
+    border-radius: 50%;
+    width: 40px;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+}
+
+.btn-i{
+    width: 40px;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    border-radius: 50%;
+}
+
+.btn-i i{
+    color: rgb(196, 199, 197);
+}
+
+.nova-conv{
+    color: rgb(196, 199, 197);
+}
+
+.mi-area{
+    border-radius: 30px;
+    padding: .8em 1em;
+}
+
+.mi-btn{
+    color: rgb(227, 227, 227);
+    text-transform: capitalize;
+    font-weight: 700;
+    font-size: .8rem;
+}
