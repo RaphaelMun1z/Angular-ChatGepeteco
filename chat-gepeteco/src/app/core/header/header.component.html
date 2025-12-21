@@ -2,31 +2,29 @@
     
     <div class="flex items-center gap-3">
         <button 
-            type="button"
-            (click)="toggleSb()" 
-            aria-label="Abrir menu lateral"
-            class="md:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500/50 rounded-lg p-1">
-            <i class="fa-solid fa-bars text-xl"></i>
-        </button>
+        type="button"
+        (click)="toggleSb()" 
+        aria-label="Abrir menu lateral"
+        class="md:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500/50 rounded-lg p-1">
+        <i class="fa-solid fa-bars text-xl"></i>
+    </button>
     
-        <div class="flex items-center gap-2 py-1.5 rounded-lg select-none cursor-default">
-            <span class="font-semibold text-lg text-gray-700 dark:text-gray-200 tracking-tight">
-                Chat Gepeteco
-            </span>
-            <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-100 text-brand-600 px-2 py-0.5 rounded-full dark:bg-brand-500/10 dark:text-brand-400 border border-brand-200 dark:border-brand-500/20">
-                Beta
-            </span>
-        </div>
+    <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-1.5 rounded-lg transition-colors group">
+        <span class="font-semibold text-lg text-gray-700 dark:text-gray-200">
+            Chat Gepeteco
+        </span>
+        <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-100 text-brand-600 px-2 py-0.5 rounded-full dark:bg-brand-500/10 dark:text-brand-400 border border-brand-200 dark:border-brand-500/20">
+            Beta
+        </span>
     </div>
+</div>
 
-    <div class="flex items-center">
-        <button 
-            type="button"
-            (click)="toggleSt()" 
-            aria-label="Abrir configurações"
-            class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-brand-500/50">
-            <i class="fa-solid fa-cog text-lg"></i>
-        </button>
-    </div>
+<div class="flex items-center">
+    <button 
+    (click)="toggleSt()" 
+    class="w-10 h-10 cursor-pointer rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all" title="Configurações">
+    <i class="fa-solid fa-cog"></i>
+</button>
+</div>
 
 </header>

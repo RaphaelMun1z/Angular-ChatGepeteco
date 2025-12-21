@@ -1,15 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { sendMessage } from '../../store/chat.actions';
-import { selectMessages, selectIsLoading } from '../../store/chat.selectors';
-import { Store } from '@ngrx/store';
-import { map } from 'rxjs';
 import { AsideHistoryComponent } from "../../core/aside-history/aside-history.component";
 import { HeaderComponent } from "../../core/header/header.component";
 import { ChatBoxComponent } from "../../core/chat-box/chat-box.component";
 import { InputContainerComponent } from "../../core/input-container/input-container.component";
 import { ModalConfigComponent } from "../../core/modal-config/modal-config.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-chat-layout',
