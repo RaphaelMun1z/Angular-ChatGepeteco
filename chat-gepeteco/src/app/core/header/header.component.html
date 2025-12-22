@@ -1,4 +1,4 @@
-<header class="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 bg-white/80 dark:bg-dark-bg/80 backdrop-blur-sm sticky top-0 z-10 border-b border-gray-100 dark:border-gray-800">
+<header class="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 bg-white/80 dark:bg-dark-bg/80 backdrop-blur-sm sticky top-0 z-10">
     
     <div class="flex items-center gap-3">
         <button 
@@ -24,14 +24,19 @@
 
 <div class="flex items-center">
     <button 
-    class="w-10 h-10 cursor-pointer rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all" title="Arquivos">
-    <i class="fa-solid fa-box-archive"></i>
-</button>
-<button 
-(click)="toggleSt()" 
-class="w-10 h-10 cursor-pointer rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all" title="Configurações">
-<i class="fa-solid fa-cog"></i>
-</button>
+    class="w-10 h-10 cursor-pointer rounded-full flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-all" title="Arquivos">
+    <i class="fa-solid fa-box-archive"></i></button>
+    
+    <div class="inline-flex items-center gap-3 rounded-full">
+        <div class="bg-[#2a2c2e] text-[#a0a0a0] font-sans font-semibold text-sm px-4 py-1.5 rounded-full leading-none">
+            PRO
+        </div>
+        <div class="profile-circle-border flex items-center justify-center">
+            <div class="w-full h-full bg-[#1a1c1e] rounded-full overflow-hidden flex items-center justify-center">
+                <img src="https://i.pravatar.cc/150?img=68" alt="Perfil" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </div>
 </div>
 
 </header>

@@ -6,7 +6,7 @@ import { Injectable, signal } from '@angular/core';
 
 export class UiService {
     isSettingsOpen = signal(false);
-    isSidebarOpen = signal(false);
+    isSidebarOpen = signal(true);
     isProfileSettingsModalOpen = signal(false);
 
     toggleSettings() {

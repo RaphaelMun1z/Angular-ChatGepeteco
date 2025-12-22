@@ -2,3 +2,17 @@
     color: rgb(196, 199, 197);
     font-weight: 500;
 }
+
+.profile-circle-border {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-image: conic-gradient(
+    #f44336 0deg 90deg, 
+    #2196f3 90deg 180deg, 
+    #4caf50 180deg 270deg, 
+    #ffeb3b 270deg 360deg
+    );
+    padding: 3px;
+}

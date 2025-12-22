@@ -1,7 +1,7 @@
 <div class="max-w-3xl mx-auto w-full flex gap-4 animate-fade-in" 
 [ngClass]="{'justify-end': message.sender === 'user'}">
     <app-msg-model-bot *ngIf="message.sender === 'bot'"></app-msg-model-bot>
-    
+
     <app-msg [message]="message"></app-msg>
 
     <app-msg-model-user *ngIf="message.sender === 'user'"></app-msg-model-user>

@@ -37,9 +37,31 @@ export const chatReducer = createReducer(
                 ]
             })),
             
-            on(sendMessageFailure, (state, { error }) => ({
-                ...state,
-                loading: false,
-                error: error
-            }))
+            on(sendMessageFailure, (state, { error }) => {
+                let mensagemErro = 'Ocorreu um erro inesperado.';
+                
+                if (error.status === 0) {
+                   mensagemErro = 'Não foi possível conectar ao servidor. Verifique se a API está rodando.';
+                } else if (error.status === 404) {
+                    mensagemErro = '❌ Serviço de chat não encontrado.';
+                } else {
+                    mensagemErro = `❌ Erro: ${error.message}`;
+                }
+                
+                return {
+                    ...state,
+                    loading: false,
+                    error: error,
+                    messages: [
+                        ...state.messages,
+                        { 
+                            id: Date.now().toString(),
+                            text: mensagemErro, 
+                            sender: 'bot' as const,
+                            isError: true,
+                            timestamp: new Date() 
+                        }
+                    ]
+                };
+            })
         );

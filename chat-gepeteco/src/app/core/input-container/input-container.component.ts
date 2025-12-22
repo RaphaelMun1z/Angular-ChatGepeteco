@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { sendMessage } from '../../store/chat.actions';
 import { FormsModule } from '@angular/forms';
@@ -13,8 +13,8 @@ import { FormsModule } from '@angular/forms';
 
 export class InputContainerComponent {
     private store = inject(Store);
-    chatInput: any;
-    userInput: string = '';
+    @ViewChild('chatInput') chatInput!: ElementRef<HTMLTextAreaElement>;
+    userInput = '';
     
     autoResize() {
         const el = this.chatInput.nativeElement;
@@ -32,13 +32,13 @@ export class InputContainerComponent {
     send() {
         if (!this.userInput.trim()) return;
         
-        // Dispara a ação do NgRx
         this.store.dispatch(
             sendMessage({ content: this.userInput })
         );
         
-        // Limpa UI
         this.userInput = '';
-        this.chatInput.nativeElement.style.height = 'auto';
+        if (this.chatInput) {
+            this.chatInput.nativeElement.style.height = 'auto';
+        }
     }
 }

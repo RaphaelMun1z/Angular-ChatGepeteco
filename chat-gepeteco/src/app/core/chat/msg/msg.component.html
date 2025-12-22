@@ -1,6 +1,18 @@
-<div [ngClass]="{
-    'bg-gray-100 dark:bg-dark-input text-gray-800 dark:text-gray-200 px-4 py-2.5 rounded-2xl rounded-tr-sm order-1 max-w-[85%] shadow-sm border border-transparent dark:border-gray-700/50': message.sender === 'user',
-    'text-gray-800 dark:text-gray-200 py-1 flex-1 leading-relaxed': message.sender === 'bot'
-}">
-<span [innerHTML]="message.text"></span>
+<div class="relative text-sm break-words my-2 flex items-start">
+    <i
+    *ngIf="message.isError"
+    class="fa-solid fa-triangle-exclamation mr-2 mt-1 flex-shrink-0"
+    ></i>
+    
+    <div
+    class="bg-gray-100 dark:bg-dark-input
+    text-gray-800 dark:text-gray-100
+    px-4 py-2.5
+    rounded-2xl rounded-tr-sm
+    max-w-[85%]
+    prose
+    shadow-sm"
+    >
+    {{ message.text }}
+</div>
 </div>
