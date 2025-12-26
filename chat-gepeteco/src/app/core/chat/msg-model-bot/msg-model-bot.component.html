@@ -1,3 +1,7 @@
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 text-white text-xs shadow-lg shadow-blue-500/20">
-    <i class="fa-solid fa-wand-magic-sparkles"></i>
+<div class="relative w-9 h-9 flex items-center justify-center mt-1">
+    <div *ngIf="isLoading" class="gemini-loader absolute inset-0 w-full h-full z-0"></div>
+    
+    <div class="relative z-10 w-full h-full flex items-center justify-center p-2">
+        <img src="logo-chat.png" alt="Bot" class="w-full h-full object-contain">
+    </div>
 </div>

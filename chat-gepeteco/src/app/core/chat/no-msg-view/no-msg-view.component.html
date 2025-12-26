@@ -1,36 +1,104 @@
-<div class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth pb-32 bg-white dark:bg-dark-bg transition-colors duration-300 overflow-y-scroll max-h-[70vh]">
-    <div class="min-h-full py-12 flex flex-col items-center justify-center text-center max-w-2xl mx-auto animate-slide-up">
+<div class="flex flex-col w-full max-w-[800px] mx-auto p-4 font-sans text-[#e3e3e3]">
+    
+    <header class="mb-5">
+        <div class="flex items-center gap-3 mb-2">
+            <img src="logo-chat.png" alt="Logo" class="w-7 h-7 object-contain">
+            <h1 class="text-[1.5rem] text-[#e3e3e3] font-normal leading-none tracking-tight">
+                Olá, Raphael
+            </h1>
+        </div>
+    </header>
+    
+    <div class="bg-[#1e1f20] hover:bg-[#2b2c2d] transition-colors rounded-[28px] p-5 flex flex-col justify-between cursor-text mb-8 relative group">
         
-        <div class="mb-8 w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <i class="fa-solid fa-wand-magic-sparkles text-2xl text-white"></i>
+        <div class="text-[#c4c7c5] text-lg opacity-70 mt-1 ml-1 font-normal">
+            Peça ao Gemini 3
         </div>
         
-        <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 mb-2">
-            Olá,
-        </h1>
-        <p class="text-xl text-gray-500 dark:text-gray-400 mb-8">Como posso ajudar você hoje?</p>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full px-4">
+        <div class="flex items-center justify-between mt-4 relative">
             
-            <button (click)="fillInput('Criar um roteiro de viagem para o Japão')" 
-            class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-dark-surface hover:bg-gray-50 dark:hover:bg-dark-input text-left transition-all hover:shadow-md hover:-translate-y-1 group">
-            <div class="flex items-center justify-between mb-2">
-                <i class="fa-solid fa-plane text-blue-500 group-hover:scale-110 transition-transform"></i>
+            <div class="flex items-center gap-2 relative">
+                
+                <div class="relative">
+                    <button (click)="togglePlusPopup()" 
+                    class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+                    [ngClass]="{'bg-white/10 text-white': isPlusPopupOpen}">
+                    <i class="fa-solid fa-plus text-[#e3e3e3] transition-transform duration-200"
+                    [ngClass]="{'rotate-45': isPlusPopupOpen}"></i>
+                </button>
+                
+                <div *ngIf="isPlusPopupOpen" 
+                class="absolute bottom-full left-0 mb-2 w-56 bg-[#2b2c2d] border border-[#444746] rounded-xl shadow-2xl overflow-hidden z-20 flex flex-col p-1">
+                
+                <label class="flex items-center gap-3 w-full px-3 py-3 hover:bg-[#333537] rounded-lg text-left transition-colors cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-[#333537] flex items-center justify-center border border-[#444746]">
+                        <i class="fa-solid fa-file-pdf text-[#e3e3e3]"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-[#e3e3e3]">Fazer upload</span>
+                        <span class="text-xs text-[#c4c7c5]">Apenas arquivos .pdf</span>
+                    </div>
+                    <input type="file" accept=".pdf" class="hidden" (change)="handleFileUpload($event)">
+                </label>
             </div>
-            <span class="text-sm text-gray-600 dark:text-gray-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 font-medium">
-                Roteiro para o Japão
-            </span>
-        </button>
-        
-        <button (click)="fillInput('Explique a computação quântica')" 
-        class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-dark-surface hover:bg-gray-50 dark:hover:bg-dark-input text-left transition-all hover:shadow-md hover:-translate-y-1 group">
-        <div class="flex items-center justify-between mb-2">
-            <i class="fa-solid fa-atom text-purple-500 group-hover:scale-110 transition-transform"></i>
         </div>
-        <span class="text-sm text-gray-600 dark:text-gray-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 font-medium">
-            Computação Quântica
-        </span>
-    </button>
+    </div>
+    
+    <div class="relative">
+        <div (click)="toggleModelPopup()" 
+        class="flex items-center gap-1.5 text-[#c4c7c5] text-[0.8rem] font-medium cursor-pointer hover:text-white transition-colors py-2 px-3 rounded-lg hover:bg-white/5 select-none">
+        {{ selectedModel.name }} 
+        <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"
+        [ngClass]="{'rotate-180': isModelPopupOpen}"></i>
+    </div>
+    
+    <div *ngIf="isModelPopupOpen" 
+    class="absolute bottom-full right-0 mb-2 w-64 bg-[#2b2c2d] rounded-xl shadow-2xl overflow-hidden z-20 flex flex-col p-1">
+    
+    <div class="px-3 py-2 text-xs text-[#c4c7c5] font-bold uppercase tracking-wider">
+        Modelos Disponíveis
+    </div>
+    
+    <button *ngFor="let model of availableModels"
+    (click)="selectModel(model)"
+    class="flex items-center gap-3 w-full px-3 py-3 rounded-lg text-left transition-colors"
+    [ngClass]="selectedModel.id === model.id ? 'bg-[#333537]' : 'hover:bg-[#333537]'">
+    
+    <i class="fa-solid text-lg w-5 text-center" 
+    [ngClass]="[model.icon, model.iconColor]"></i>
+    
+    <div class="flex flex-col">
+        <span class="text-sm font-medium" 
+        [ngClass]="selectedModel.id === model.id ? 'text-white' : 'text-[#e3e3e3]'">
+        {{ model.name }}
+    </span>
+    <span class="text-xs text-[#c4c7c5]">{{ model.description }}</span>
+</div>
+
+<i *ngIf="selectedModel.id === model.id" 
+class="fa-solid fa-check text-[#a8c7fa] ml-auto text-sm"></i>
+</button>
+
+<div class="h-px bg-[#444746] my-1 mx-2"></div>
+
+<button class="flex items-center gap-3 w-full px-3 py-2 hover:bg-[#333537] rounded-lg text-left transition-colors text-xs text-[#a8c7fa]">
+    <i class="fa-solid fa-gear text-sm w-5 text-center"></i>
+    Gerenciar modelos
+</button>
 </div>
 </div>
+</div>
+</div>
+
+<div class="flex flex-wrap justify-center gap-3 w-full">
+    <ng-container *ngFor="let option of quickOptions; let i = index">
+        <div *ngIf="i === 4" class="basis-full h-0"></div>
+        
+        <button class="bg-[#1e1f20] hover:bg-[#333537] h-[48px] px-5 rounded-2xl flex items-center gap-2 text-[#e3e3e3] font-medium transition-colors text-[0.95rem]">
+            <span *ngIf="option.icon" class="text-lg">{{ option.icon }}</span>
+            {{ option.text }}
+        </button>
+    </ng-container>
+</div>
+
 </div>

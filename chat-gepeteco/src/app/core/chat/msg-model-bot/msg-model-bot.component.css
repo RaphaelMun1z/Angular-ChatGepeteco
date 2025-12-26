@@ -1,0 +1,22 @@
+@keyframes spin-pause {
+    0% { transform: rotate(0deg); }
+    80% { transform: rotate(360deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.gemini-loader {
+    background: conic-gradient(
+    from 0deg, 
+    transparent 0deg, 
+    transparent 60deg, 
+    #3b82f6 100deg, 
+    #8b5cf6 180deg, 
+    #ec4899 260deg, 
+    #ef4444 320deg, 
+    #eab308 360deg
+    );
+    mask: radial-gradient(farthest-side, transparent calc(100% - 2px), black calc(100% - 2px));
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), black calc(100% - 2px));
+    animation: spin-pause 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    border-radius: 50%;
+}

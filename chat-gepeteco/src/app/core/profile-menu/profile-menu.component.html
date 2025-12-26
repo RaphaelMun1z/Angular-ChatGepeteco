@@ -1,14 +1,22 @@
 <div class="relative mb-3">
     <button (click)="togglePopup()" 
-            class="w-full flex items-center gap-3 p-3 rounded-full transition-all duration-200 
-                   text-gray-300 hover:text-white 
-                   hover:bg-[#333537] 
-                   group focus:outline-none" 
+            class="w-full flex items-center gap-3 py-2 rounded-full transition-all duration-200 
+                   text-gray-700 dark:text-gray-300 
+                   hover:text-gray-900 dark:hover:text-white 
+                   hover:bg-gray-200 dark:hover:bg-[#333537] 
+                   group focus:outline-none h-[44px]"
+            [class.px-3]="!isCollapsed"
+            [class.justify-center]="isCollapsed"
+            [class.justify-start]="!isCollapsed"
             id="profile-btn">
     
-        <i class="fa-solid fa-gear text-gray-400 group-hover:text-white transition-colors text-lg ml-1"></i>
+        <i class="fa-solid fa-gear text-lg transition-colors shrink-0
+                  text-gray-500 dark:text-gray-400 
+                  group-hover:text-gray-700 dark:group-hover:text-white"></i>
         
-        <span class="font-medium text-left flex-1 text-sm">Configurações e Ajuda</span>
+        <span *ngIf="!isCollapsed" class="font-medium text-left flex-1 text-sm whitespace-nowrap overflow-hidden">
+            Configurações e Ajuda
+        </span>
     
     </button>
     

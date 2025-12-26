@@ -13,10 +13,36 @@ import { ConversationItemComponent } from "./conversation-item/conversation-item
 })
 
 export class AsideHistoryComponent {
+    myItems = [
+        { 
+            title: 'Doc. do Projeto', 
+            icon: 'fa-regular fa-file-lines', 
+            colorClass: 'text-blue-600 dark:text-blue-400' 
+        },
+        { 
+            title: 'Ativ. Prática...', 
+            icon: 'fa-solid fa-code', 
+            colorClass: 'text-green-600 dark:text-green-400' 
+        },
+        { 
+            title: 'Proj. Angular', 
+            icon: 'fa-solid fa-code', 
+            colorClass: 'text-green-600 dark:text-green-400' 
+        }
+    ];
+    
+    gems = [
+        {
+            label: 'Parceiro de Programação',
+            icon: 'fa-regular fa-gem',
+            colorClass: 'text-purple-600 dark:text-purple-400'
+        }
+    ];
+    
     chatHistory = [
-        { id: '1', title: 'Planejamento Projeto EDII', route: '/c/1', isPinned: true },
-        { id: '2', title: 'Modificação do Aside', route: '/c/2', isPinned: false },
-        { id: '3', title: 'Scrapy Spider para Vagas', route: '/c/3', isPinned: false },
+        { id: '1', title: 'Histórico 01', route: '/c/1', isPinned: true },
+        { id: '2', title: 'Histórico 02', route: '/c/2', isPinned: false },
+        { id: '3', title: 'Histórico 03', route: '/c/3', isPinned: false },
     ];
     
     constructor(public uiService: UiService) {}

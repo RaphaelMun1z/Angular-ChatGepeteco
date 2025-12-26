@@ -5,10 +5,11 @@ import { map } from 'rxjs';
 import { selectIsLoading, selectMessages } from '../../store/chat.selectors';
 import { MsgContainerViewComponent } from "../chat/msg-container-view/msg-container-view.component";
 import { MsgLoadingComponent } from "../chat/msg-loading/msg-loading.component";
+import { InputContainerComponent } from '../input-container/input-container.component';
 
 @Component({
     selector: 'app-chat-box',
-    imports: [CommonModule, MsgContainerViewComponent, MsgLoadingComponent],
+    imports: [CommonModule, MsgContainerViewComponent, MsgLoadingComponent, InputContainerComponent],
     templateUrl: './chat-box.component.html',
     styleUrl: './chat-box.component.css'
 })

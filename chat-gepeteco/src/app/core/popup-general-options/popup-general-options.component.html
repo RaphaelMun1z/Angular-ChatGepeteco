@@ -1,45 +1,67 @@
-<div class="fixed bottom-[80px] left-4 w-[280px] bg-[#1e1f20] rounded-2xl shadow-2xl border border-[#444746] py-2 z-[9990] font-sans flex flex-col">
+<div class="fixed bottom-[80px] left-4 w-[280px] 
+            bg-white dark:bg-[#1e1f20] 
+            rounded-2xl shadow-2xl 
+            border border-gray-200 dark:border-[#444746] 
+            py-2 z-[9990] font-sans flex flex-col transition-colors duration-200">
 
     <ng-container *ngFor="let item of menuItems">
 
-        <div *ngIf="item.separatorAbove" class="my-1 border-t border-gray-700/30 mx-2"></div>
+        <div *ngIf="item.separatorAbove" class="my-1 border-t border-gray-200 dark:border-gray-700/30 mx-2"></div>
 
         <button *ngIf="!item.children" 
                 (click)="handleAction(item)"
-                class="w-full flex items-center gap-4 px-4 py-2.5 hover:bg-[#333537] text-[#e3e3e3] text-[14px] transition-colors text-left group">
-            <i [class]="item.icon + ' w-5 text-center text-gray-400 group-hover:text-white transition-colors'"></i>
+                class="w-full flex items-center gap-4 px-4 py-2.5 
+                       hover:bg-gray-100 dark:hover:bg-[#333537] 
+                       text-gray-700 dark:text-[#e3e3e3] 
+                       text-[14px] transition-colors text-left group">
+            
+            <i [class]="item.icon + ' w-5 text-center transition-colors ' + 
+                        'text-gray-500 dark:text-gray-400 ' + 
+                        'group-hover:text-gray-900 dark:group-hover:text-white'"></i>
             <span>{{ item.label }}</span>
         </button>
 
         <div *ngIf="item.children" class="relative w-full">
             
             <button (click)="toggleSubMenu(item.label)"
-                    [class.bg-[#333537]]="activeSubMenu === item.label"
-                    class="w-full flex items-center justify-between px-4 py-2.5 hover:bg-[#333537] text-[#e3e3e3] text-[14px] transition-colors text-left group">
+                    [ngClass]="activeSubMenu === item.label ? 'bg-gray-100 dark:bg-[#333537]' : 'hover:bg-gray-100 dark:hover:bg-[#333537]'"
+                    class="w-full flex items-center justify-between px-4 py-2.5 
+                           text-gray-700 dark:text-[#e3e3e3] 
+                           text-[14px] transition-colors text-left group">
                 
                 <div class="flex items-center gap-4">
-                    <i [class]="item.icon + ' w-5 text-center text-gray-400 group-hover:text-white transition-colors'"></i>
+                    <i [class]="item.icon + ' w-5 text-center transition-colors ' + 
+                                'text-gray-500 dark:text-gray-400 ' + 
+                                'group-hover:text-gray-900 dark:group-hover:text-white'"></i>
                     <span>{{ item.label }}</span>
                 </div>
                 
-                <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white transition-transform duration-200"
+                <i class="fa-solid fa-chevron-right text-xs transition-transform duration-200 
+                          text-gray-400 dark:text-gray-500 
+                          group-hover:text-gray-900 dark:group-hover:text-white"
                    [class.rotate-90]="activeSubMenu === item.label"></i>
             </button>
 
-            <div [class]="'absolute left-[100%] ml-2 w-[220px] bg-[#1e1f20] rounded-2xl shadow-xl border border-[#444746] py-2 transition-all duration-200 z-[9999] ' + 
+            <div [class]="'absolute left-[100%] ml-2 w-[220px] rounded-2xl shadow-xl py-2 transition-all duration-200 z-[9999] ' + 
+                          'bg-white dark:bg-[#1e1f20] border border-gray-200 dark:border-[#444746] ' +
                           (item.label === 'Ajuda' ? 'bottom-0' : 'top-0') + ' ' +
                           (activeSubMenu === item.label ? 'visible opacity-100 translate-x-0' : 'invisible opacity-0 -translate-x-2')">
                 
                 <button *ngFor="let child of item.children"
                         (click)="handleAction(child)" 
-                        class="w-full flex items-center justify-between px-4 py-2.5 hover:bg-[#333537] text-[#e3e3e3] text-[14px] transition-colors text-left group/item">
+                        class="w-full flex items-center justify-between px-4 py-2.5 
+                               hover:bg-gray-100 dark:hover:bg-[#333537] 
+                               text-gray-700 dark:text-[#e3e3e3] 
+                               text-[14px] transition-colors text-left group/item">
                     
                     <div class="flex items-center gap-4">
-                        <i [class]="child.icon + ' w-5 text-center text-gray-400 group-hover/item:text-white'"></i>
+                        <i [class]="child.icon + ' w-5 text-center transition-colors ' + 
+                                    'text-gray-500 dark:text-gray-400 ' + 
+                                    'group-hover/item:text-gray-900 dark:group-hover/item:text-white'"></i>
                         <span>{{ child.label }}</span>
                     </div>
 
-                    <i *ngIf="isThemeActive(child.label)" class="fa-solid fa-check text-blue-400 text-sm animate-in fade-in zoom-in duration-200"></i>
+                    <i *ngIf="isThemeActive(child.label)" class="fa-solid fa-check text-blue-600 dark:text-blue-400 text-sm animate-in fade-in zoom-in duration-200"></i>
                 </button>
 
             </div>
@@ -50,12 +72,12 @@
     <div class="mt-2 pt-2 px-4 pb-1 border-t border-transparent">
         <div class="flex items-start gap-4 text-xs">
             <div class="w-5 flex justify-center mt-1">
-                <div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
             </div>
             <div class="flex flex-col">
-                <span class="text-gray-300 font-medium">Monte Carmelo - MG, Brasil</span>
-                <span class="text-gray-500 leading-tight mt-0.5">
-                    Pelo endereço IP • <a href="#" class="text-blue-400 hover:text-blue-300">Atualizar localização</a>
+                <span class="text-gray-600 dark:text-gray-300 font-medium">Monte Carmelo - MG, Brasil</span>
+                <span class="text-gray-500 dark:text-gray-500 leading-tight mt-0.5">
+                    Pelo endereço IP • <a href="#" class="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">Atualizar localização</a>
                 </span>
             </div>
         </div>

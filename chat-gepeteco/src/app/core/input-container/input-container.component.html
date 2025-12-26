@@ -1,31 +1,95 @@
-<div class="relative bottom-0 left-0 w-full bg-gradient-to-t from-white via-white to-transparent dark:from-dark-bg dark:via-dark-bg dark:to-transparent">
-    <div class="max-w-3xl mx-auto">
-        <div class="relative flex gap-2 bg-gray-100 dark:bg-dark-surface p-2 rounded-3xl border border-transparent focus-within:border-gray-300 dark:focus-within:border-gray-600 shadow-sm transition-all items-center">
+<div class="bg-[#1e1f20] hover:bg-[#2b2c2d] transition-colors rounded-[28px] p-5 flex flex-col justify-between cursor-text mb-8 relative group">
+    
+    <textarea 
+        [(ngModel)]="userInput"
+        (keydown)="handleEnter($event)"
+        rows="1" 
+        placeholder="Peça ao Gemini 3" 
+        class="w-full bg-transparent border-none focus:ring-0 text-[#e3e3e3] placeholder-[#c4c7c5]/70 text-lg resize-none max-h-64 overflow-y-auto focus:outline-none mt-1 ml-1 font-normal scrollbar-hide"
+    ></textarea>
+    
+    <div class="flex items-center justify-between mt-4 relative">
+        
+        <div class="flex items-center gap-2 relative">
             
-            <button class="btn-round p-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                <i class="fa-solid fa-paperclip"></i>
-            </button>
+            <div class="relative">
+                <button (click)="togglePlusPopup()" 
+                        class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+                        [ngClass]="{'bg-white/10 text-white': isPlusPopupOpen}">
+                    <i class="fa-solid fa-plus text-[#e3e3e3] transition-transform duration-200"
+                       [ngClass]="{'rotate-45': isPlusPopupOpen}"></i>
+                </button>
+                
+                <div *ngIf="isPlusPopupOpen" 
+                     class="absolute bottom-full left-0 mb-2 w-56 bg-[#2b2c2d] border border-[#444746] rounded-xl shadow-2xl overflow-hidden z-20 flex flex-col p-1">
+                    
+                    <label class="flex items-center gap-3 w-full px-3 py-3 hover:bg-[#333537] rounded-lg text-left transition-colors cursor-pointer">
+                        <div class="w-8 h-8 rounded-full bg-[#333537] flex items-center justify-center border border-[#444746]">
+                            <i class="fa-solid fa-file-pdf text-[#e3e3e3]"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium text-[#e3e3e3]">Fazer upload</span>
+                            <span class="text-xs text-[#c4c7c5]">Apenas arquivos .pdf</span>
+                        </div>
+                        <input type="file" accept=".pdf" class="hidden" (change)="handleFileUpload($event)">
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3 relative">
             
-            <textarea 
-            #chatInput
-            [(ngModel)]="userInput"
-            (input)="autoResize()"
-            (keydown)="handleEnter($event)"
-            rows="1" 
-            placeholder="Digite uma mensagem..." 
-            class="w-full bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-500 resize-none py-3 max-h-48 overflow-y-auto focus:outline-none"
-            ></textarea>
-            
+            <div class="relative">
+                <div (click)="toggleModelPopup()" 
+                     class="flex items-center gap-1.5 text-[#c4c7c5] text-[0.8rem] font-medium cursor-pointer hover:text-white transition-colors py-2 px-3 rounded-lg hover:bg-white/5 select-none">
+                    {{ selectedModel.name }} 
+                    <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"
+                       [ngClass]="{'rotate-180': isModelPopupOpen}"></i>
+                </div>
+                
+                <div *ngIf="isModelPopupOpen" 
+                     class="absolute bottom-full right-0 mb-2 w-64 bg-[#2b2c2d] rounded-xl shadow-2xl overflow-hidden z-20 flex flex-col p-1 border border-[#444746]">
+                    
+                    <div class="px-3 py-2 text-xs text-[#c4c7c5] font-bold uppercase tracking-wider">
+                        Modelos Disponíveis
+                    </div>
+                    
+                    <button *ngFor="let model of availableModels"
+                            (click)="selectModel(model)"
+                            class="flex items-center gap-3 w-full px-3 py-3 rounded-lg text-left transition-colors"
+                            [ngClass]="selectedModel.id === model.id ? 'bg-[#333537]' : 'hover:bg-[#333537]'">
+                        
+                        <i class="fa-solid text-lg w-5 text-center" 
+                           [ngClass]="[model.icon, model.iconColor]"></i>
+                        
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium" 
+                                  [ngClass]="selectedModel.id === model.id ? 'text-white' : 'text-[#e3e3e3]'">
+                                {{ model.name }}
+                            </span>
+                            <span class="text-xs text-[#c4c7c5]">{{ model.description }}</span>
+                        </div>
+
+                        <i *ngIf="selectedModel.id === model.id" 
+                           class="fa-solid fa-check text-[#a8c7fa] ml-auto text-sm"></i>
+                    </button>
+
+                    <div class="h-px bg-[#444746] my-1 mx-2"></div>
+
+                    <button class="flex items-center gap-3 w-full px-3 py-2 hover:bg-[#333537] rounded-lg text-left transition-colors text-xs text-[#a8c7fa]">
+                        <i class="fa-solid fa-gear text-sm w-5 text-center"></i>
+                        Gerenciar modelos
+                    </button>
+                </div>
+            </div>
+
             <button (click)="send()" 
-            [disabled]="!userInput.trim()" 
-            [class.bg-brand-600]="userInput.trim()" 
-            [class.text-white]="userInput.trim()"
-            class="btn-round p-3 mb-1 bg-gray-300 dark:bg-gray-700 text-gray-500 rounded-full transition-all duration-200 disabled:opacity-50 hover:bg-brand-500">
-            <i class="fa-solid fa-paper-plane"></i>
-        </button>
+                    [disabled]="!userInput.trim()"
+                    class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200"
+                    [ngClass]="userInput.trim() ? 'bg-white text-black hover:bg-[#e3e3e3]' : 'bg-transparent text-transparent cursor-default'">
+                <i class="fa-solid fa-paper-plane text-sm" [ngClass]="{'opacity-0': !userInput.trim()}"></i>
+            </button>
+
+        </div>
     </div>
-    <div class="text-center mt-2">
-        <p class="text-xs text-gray-400 dark:text-gray-500">A IA pode cometer erros.</p>
-    </div>
-</div>
 </div>

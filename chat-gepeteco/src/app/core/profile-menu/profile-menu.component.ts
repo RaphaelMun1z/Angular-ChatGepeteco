@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { UiService } from '../../services/ui.service';
 import { PopupGeneralOptionsComponent } from "../popup-general-options/popup-general-options.component";
 
@@ -11,6 +11,8 @@ import { PopupGeneralOptionsComponent } from "../popup-general-options/popup-gen
 })
 
 export class ProfileMenuComponent {
+    @Input() isCollapsed = false;
+    
     public uiService = inject(UiService);
     
     closeSidebar() {

@@ -9,11 +9,10 @@ import { ModalConfigComponent } from "../../core/modal-config/modal-config.compo
 
 @Component({
     selector: 'app-chat-layout',
-    imports: [CommonModule, FormsModule, AsideHistoryComponent, HeaderComponent, InputContainerComponent, ModalConfigComponent, RouterOutlet],
+    imports: [CommonModule, FormsModule, AsideHistoryComponent, HeaderComponent, ModalConfigComponent, RouterOutlet],
     templateUrl: './chat-layout.component.html',
     styleUrl: './chat-layout.component.css'
 })
 
 export class ChatLayoutComponent {
-    isDarkMode = true; 
 }
