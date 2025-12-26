@@ -1,29 +1,34 @@
 import { effect, Injectable, signal } from '@angular/core';
 
+export type ThemeType = 'light' | 'dark' | 'system';
+
 @Injectable({
     providedIn: 'root'
 })
-
 export class ThemeService {
-    themeSignal = signal<'light' | 'dark'>(
-        (localStorage.getItem('theme') as 'light' | 'dark') || 'light'
+    themeSignal = signal<ThemeType>(
+        (localStorage.getItem('theme') as ThemeType) || 'system'
     );
     
     constructor() {
         effect(() => {
             const theme = this.themeSignal();
             
-            // Remove classes antigas e adiciona a nova na raiz (<html>)
+            localStorage.setItem('theme', theme);
+            
             const html = document.documentElement;
             html.classList.remove('light', 'dark');
-            html.classList.add(theme);
             
-            // Salva no LocalStorage para persistir após refresh
-            localStorage.setItem('theme', theme);
+            if (theme === 'system') {
+                const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                html.classList.add(systemDark ? 'dark' : 'light');
+            } else {
+                html.classList.add(theme);
+            }
         });
     }
     
-    setTheme(theme: 'light' | 'dark') {
+    setTheme(theme: ThemeType) {
         this.themeSignal.set(theme);
     }
 }

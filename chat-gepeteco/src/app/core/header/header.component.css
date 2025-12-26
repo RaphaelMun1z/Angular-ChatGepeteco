@@ -5,8 +5,8 @@
 
 .profile-circle-border {
     position: relative;
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-image: conic-gradient(
     #f44336 0deg 90deg, 
@@ -14,5 +14,13 @@
     #4caf50 180deg 270deg, 
     #ffeb3b 270deg 360deg
     );
-    padding: 3px;
+    padding: 2px;
+}
+
+.profile-circle-border > div{
+    padding: 2px;
+}
+
+.profile-circle-border img{
+    border-radius: 50%;
 }
