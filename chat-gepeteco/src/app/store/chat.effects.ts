@@ -2,9 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { map, mergeMap, catchError } from 'rxjs/operators';
+import { map, mergeMap, catchError, switchMap } from 'rxjs/operators';
 import * as ChatActions from './chat.actions';
 import { ChatDetailsDto, ChatRequestDto, ChatResponseDto } from '../models/chat.model';
+import { ChatService } from '../services/chat.service';
 
 @Injectable()
 export class ChatEffects {
@@ -37,4 +38,20 @@ export class ChatEffects {
             );
         })
     ));
+    
+    // ============================================
+    
+    loadChatList$ = createEffect(() =>
+        this.actions$.pipe(
+        ofType(ChatActions.loadChatList),
+        switchMap(() =>
+            this.chatService.getUserChats().pipe(
+            map((chats) => ChatActions.loadChatListSuccess({ chats })),
+            catchError((error) => of(ChatActions.loadChatListFailure({ error })))
+        )
+    )));
+    
+    constructor(
+        private chatService: ChatService
+    ) {}
 }

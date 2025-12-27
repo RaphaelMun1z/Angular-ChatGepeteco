@@ -1,10 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
-import { sendMessage, sendMessageSuccess, sendMessageFailure, loadMessages, loadMessagesSuccess, loadMessagesFailure } from './chat.actions';
+import { sendMessage, sendMessageSuccess, sendMessageFailure, loadMessages, loadMessagesSuccess, loadMessagesFailure, loadChatList, loadChatListSuccess, loadChatListFailure } from './chat.actions';
 import { ChatMessage, ChatState } from '../models/chat.model';
 
 export const initialState: ChatState = {
     messages: [],
     currentChatTitle: null,
+    chatList: [],
     loading: false,
     error: null
 };
@@ -42,7 +43,7 @@ export const chatReducer = createReducer(
             messages: [...state.messages, botMessage]
         };
     }),
-
+    
     on(sendMessageFailure, (state, { error }) => {
         let errorText = 'Ocorreu um erro inesperado.';
         
@@ -80,7 +81,7 @@ export const chatReducer = createReducer(
             messages: [...state.messages, errorMessage]
         };
     }),
-
+    
     on(loadMessages, (state) => ({
         ...state,
         loading: true,
@@ -88,7 +89,7 @@ export const chatReducer = createReducer(
         currentChatTitle: null,
         messages: []
     })),
-
+    
     on(loadMessagesSuccess, (state, { chatData }) => {
         const history: ChatMessage[] = chatData.messages.map(msg => {
             const senderType = (msg.sender === 'USER') ? 'user' : 'bot';
@@ -115,5 +116,24 @@ export const chatReducer = createReducer(
         ...state,
         loading: false,
         error: error
+    })),
+    
+    // ============================================
+    
+    on(loadChatList, (state) => ({
+        ...state,
+        loading: true
+    })),
+    
+    on(loadChatListSuccess, (state, { chats }) => ({
+        ...state,
+        loading: false,
+        chatList: chats
+    })),
+    
+    on(loadChatListFailure, (state, { error }) => ({
+        ...state,
+        loading: false,
+        error
     }))
 );

@@ -33,9 +33,15 @@ export interface ChatMessage {
     isHistory?: boolean;
 }
 
+export interface ChatListItem {
+    id: string;
+    title: string;
+}
+
 export interface ChatState {
     messages: ChatMessage[];
     currentChatTitle: string | null;
+    chatList: ChatListItem[];
     loading: boolean;
     error: ChatErrorPayload | null;
 }

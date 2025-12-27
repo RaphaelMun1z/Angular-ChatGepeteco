@@ -17,3 +17,10 @@ export const selectError = createSelector(
     selectChatState,
     (state) => state.error
 );
+
+// ============================================
+
+export const selectChatList = createSelector(
+    selectChatState,
+    (state) => state.chatList
+);

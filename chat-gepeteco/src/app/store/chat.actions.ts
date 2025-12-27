@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { SendMessagePayload, ChatResponseDto, ChatErrorPayload, ChatDetailsDto } from '../models/chat.model';
+import { SendMessagePayload, ChatResponseDto, ChatErrorPayload, ChatDetailsDto, ChatListItem } from '../models/chat.model';
 
 export const sendMessage = createAction(
     '[Chat] Send Message',
@@ -29,4 +29,20 @@ export const loadMessagesSuccess = createAction(
 export const loadMessagesFailure = createAction(
     '[Chat] Load Messages Failure',
     props<{ error: ChatErrorPayload }>()
+);
+
+// ============================================
+
+export const loadChatList = createAction(
+    '[Sidebar] Load Chat List'
+);
+
+export const loadChatListSuccess = createAction(
+    '[Sidebar] Load Chat List Success',
+    props<{ chats: ChatListItem[] }>()
+);
+
+export const loadChatListFailure = createAction(
+    '[Sidebar] Load Chat List Failure',
+    props<{ error: any }>()
 );
