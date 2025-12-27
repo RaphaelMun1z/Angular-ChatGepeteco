@@ -1,11 +1,11 @@
-<div class="relative text-sm break-words my-2 flex items-start">
+<div class="relative text-sm my-2 flex items-start">
     
     <i *ngIf="message.isError" 
        class="fa-solid fa-triangle-exclamation mr-2 mt-2.5 flex-shrink-0 text-red-500">
     </i>
     
     <div
-        class="px-4 py-2.5 rounded-2xl max-w-[85%] prose transition-colors"
+        class="px-4 py-2.5 rounded-2xl prose transition-colors"
         [ngClass]="{
             'bg-gray-100 dark:bg-dark-input text-gray-800 dark:text-gray-100 shadow-sm rounded-tr-sm': message.sender === 'user' && !message.isError,
             
@@ -13,7 +13,7 @@
             
             'bg-transparent pl-0 text-gray-800 dark:text-gray-100': message.sender !== 'user' && !message.isError
         }"
-        [innerHTML]="formattedContent">
+        [innerHTML]="displayedContent">
     </div>
 
 </div>

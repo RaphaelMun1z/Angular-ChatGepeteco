@@ -12,3 +12,8 @@ export const selectIsLoading = createSelector(
     selectChatState,
     (state) => state.loading
 );
+
+export const selectError = createSelector(
+    selectChatState,
+    (state) => state.error
+);

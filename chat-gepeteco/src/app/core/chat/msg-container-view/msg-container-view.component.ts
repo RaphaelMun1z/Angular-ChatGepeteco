@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MsgModelBotComponent } from "../msg-model-bot/msg-model-bot.component";
 import { MsgComponent } from "../msg/msg.component";
-import { Message } from '../../../models/chat.model';
+import { ChatMessage } from '../../../models/chat.model';
 
 @Component({
     selector: 'app-msg-container-view',
@@ -12,5 +12,5 @@ import { Message } from '../../../models/chat.model';
 })
 
 export class MsgContainerViewComponent {
-    @Input() message!: Message;
+    @Input() message!: ChatMessage;
 }

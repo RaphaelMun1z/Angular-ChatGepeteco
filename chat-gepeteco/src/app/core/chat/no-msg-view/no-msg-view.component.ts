@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { InputContainerComponent } from '../../input-container/input-container.component';
 
 interface QuickOption {
     text: string;
@@ -16,7 +17,7 @@ interface ModelOption {
 
 @Component({
     selector: 'app-no-msg-view',
-    imports: [CommonModule],
+    imports: [CommonModule, InputContainerComponent],
     templateUrl: './no-msg-view.component.html',
     styleUrl: './no-msg-view.component.css'
 })

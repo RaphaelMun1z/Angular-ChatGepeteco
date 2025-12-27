@@ -40,7 +40,7 @@ export class AsideHistoryComponent {
     ];
     
     chatHistory = [
-        { id: '1', title: 'Histórico 01', route: '/c/1', isPinned: true },
+        { id: 'a071d7a6-62c3-4752-8326-2aad65fb2ce7', title: 'Histórico 01', route: '/c/a071d7a6-62c3-4752-8326-2aad65fb2ce7', isPinned: true },
         { id: '2', title: 'Histórico 02', route: '/c/2', isPinned: false },
         { id: '3', title: 'Histórico 03', route: '/c/3', isPinned: false },
     ];

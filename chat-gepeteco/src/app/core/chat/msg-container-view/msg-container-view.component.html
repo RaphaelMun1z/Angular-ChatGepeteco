@@ -5,9 +5,7 @@
      }">
     <app-msg-model-bot 
         *ngIf="message.sender === 'bot'"
-        [isLoading]="true"> </app-msg-model-bot>
+        [isLoading]="false"> </app-msg-model-bot>
 
     <app-msg [message]="message"></app-msg>
-
-    <!-- <app-msg-model-user *ngIf="message.sender === 'user'"></app-msg-model-user> -->
 </div>

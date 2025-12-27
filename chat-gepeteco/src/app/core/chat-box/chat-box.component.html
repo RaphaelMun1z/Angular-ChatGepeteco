@@ -1,8 +1,15 @@
-<div class="container flex-1 space-y-6 scroll-smooth pb-32 bg-white dark:bg-dark-bg transition-colors duration-300 h-[70vh] w-[40vw] mb-5 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+<div #scrollContainer class="container flex-1 space-y-6 scroll-smooth bg-white dark:bg-dark-bg transition-colors duration-300 h-[70vh] w-[40vw] mb-5 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div *ngIf="error$ | async as error" class="flex mt-auto ml-auto mr-auto items-center p-4 text-red-800 border-t-4 border-red-300 bg-red-50 dark:text-red-400 dark:bg-gray-800 dark:border-red-800 rounded-lg shadow-md mx-4 mt-4">
+        <svg class="w-6 h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div>
+            <span class="font-bold mr-2">Erro:</span>
+            <span>{{ getErrorMessage(error) }}</span>
+        </div>
+    </div>
     
     <app-msg-container-view *ngFor="let msg of messages$ | async" [message]="msg"></app-msg-container-view>
     
     <app-msg-loading *ngIf="isLoading$ | async"></app-msg-loading>
-
+    
 </div>
-<app-input-container></app-input-container>
+<app-input-container [chatId]="chatId"></app-input-container>

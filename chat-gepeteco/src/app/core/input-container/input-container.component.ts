@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { sendMessage } from '../../store/chat.actions';
 import { Store } from '@ngrx/store';
+import { SendMessagePayload } from '../../models/chat.model';
 
 interface QuickOption {
     text: string;
@@ -28,6 +29,8 @@ export class InputContainerComponent {
     private store = inject(Store);
     
     @ViewChild('chatInput') chatInput!: ElementRef;
+    
+    @Input() chatId: string = '1';
     
     userInput: string = '';
     isModelPopupOpen: boolean = false;
@@ -91,10 +94,14 @@ export class InputContainerComponent {
     send(): void {
         if (!this.userInput.trim()) return;
         
-        this.store.dispatch(
-            sendMessage({ content: this.userInput })
-        );
+        const payload: SendMessagePayload = {
+            chatId: this.chatId,
+            content: this.userInput.trim()
+        };
         
+        this.store.dispatch(sendMessage({ payload }));
         this.userInput = '';
+        this.isModelPopupOpen = false;
+        this.isPlusPopupOpen = false;
     }
 }
