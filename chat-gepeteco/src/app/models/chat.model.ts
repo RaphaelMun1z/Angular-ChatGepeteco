@@ -45,3 +45,9 @@ export interface ChatState {
     loading: boolean;
     error: ChatErrorPayload | null;
 }
+
+export interface CreateChatRequest {
+    title: string;
+    modelName: string;
+    systemInstruction?: string;
+}

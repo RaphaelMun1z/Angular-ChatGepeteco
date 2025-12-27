@@ -6,11 +6,13 @@ import { map, mergeMap, catchError, switchMap } from 'rxjs/operators';
 import * as ChatActions from './chat.actions';
 import { ChatDetailsDto, ChatRequestDto, ChatResponseDto } from '../models/chat.model';
 import { ChatService } from '../services/chat.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ChatEffects {
     private actions$ = inject(Actions);
     private http = inject(HttpClient);
+    private router = inject(Router);
     
     sendMessage$ = createEffect(() =>
         this.actions$.pipe(
@@ -50,6 +52,29 @@ export class ChatEffects {
             catchError((error) => of(ChatActions.loadChatListFailure({ error })))
         )
     )));
+    
+    // ============================================
+    
+    createChatAndSend$ = createEffect(() =>
+        this.actions$.pipe(
+        ofType(ChatActions.createChatAndSendMessage),
+        switchMap(({ title, modelName, content }) => {
+            return this.chatService.createChat({ title, modelName }).pipe( 
+                switchMap((newChat) => {
+                    return this.chatService.sendMessage(newChat.id, content).pipe(
+                        mergeMap((messageResponse) => {
+                            this.router.navigate(['/c', newChat.id]);
+                            return [
+                                ChatActions.sendMessageSuccess({ response: messageResponse }),
+                                ChatActions.loadChatList()
+                            ];
+                        }),
+                        catchError(error => of(ChatActions.sendMessageFailure({ error })))
+                    );
+                })
+            );
+        })
+    ));
     
     constructor(
         private chatService: ChatService

@@ -46,3 +46,14 @@ export const loadChatListFailure = createAction(
     '[Sidebar] Load Chat List Failure',
     props<{ error: any }>()
 );
+
+// ============================================
+
+export const createChatAndSendMessage = createAction(
+    '[Chat] Create and Send Message',
+    props<{ 
+        title: string, 
+        modelName: string, 
+        content: string 
+    }>()
+);

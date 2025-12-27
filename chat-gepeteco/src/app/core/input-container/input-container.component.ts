@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { sendMessage } from '../../store/chat.actions';
+import { createChatAndSendMessage, sendMessage } from '../../store/chat.actions';
 import { Store } from '@ngrx/store';
 import { SendMessagePayload } from '../../models/chat.model';
 
@@ -30,7 +30,7 @@ export class InputContainerComponent {
     
     @ViewChild('chatInput') chatInput!: ElementRef;
     
-    @Input() chatId: string = '1';
+    @Input() chatId: string | null = null;
     
     userInput: string = '';
     isModelPopupOpen: boolean = false;
@@ -94,12 +94,22 @@ export class InputContainerComponent {
     send(): void {
         if (!this.userInput.trim()) return;
         
-        const payload: SendMessagePayload = {
-            chatId: this.chatId,
-            content: this.userInput.trim()
-        };
+        const content = this.userInput.trim();
         
-        this.store.dispatch(sendMessage({ payload }));
+        if (this.chatId) {
+            const payload: SendMessagePayload = {
+                chatId: this.chatId,
+                content: content
+            };
+            this.store.dispatch(sendMessage({ payload }));
+        } else {
+            this.store.dispatch(createChatAndSendMessage({ 
+                title: content.substring(0, 30) + '...', 
+                modelName: this.selectedModel.name,
+                content: content 
+            }));
+        }
+        
         this.userInput = '';
         this.isModelPopupOpen = false;
         this.isPlusPopupOpen = false;
