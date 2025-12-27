@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
-import { map, mergeMap, catchError, switchMap } from 'rxjs/operators';
+import { concat, of, timer } from 'rxjs';
+import { map, mergeMap, catchError, switchMap, tap } from 'rxjs/operators';
 import * as ChatActions from './chat.actions';
 import { ChatDetailsDto, ChatRequestDto, ChatResponseDto } from '../models/chat.model';
 import { ChatService } from '../services/chat.service';
@@ -59,19 +59,24 @@ export class ChatEffects {
         this.actions$.pipe(
         ofType(ChatActions.createChatAndSendMessage),
         switchMap(({ title, modelName, content }) => {
-            return this.chatService.createChat({ title, modelName }).pipe( 
+            
+            return this.chatService.createChat({ title, modelName }).pipe(
                 switchMap((newChat) => {
-                    return this.chatService.sendMessage(newChat.id, content).pipe(
-                        mergeMap((messageResponse) => {
-                            this.router.navigate(['/c', newChat.id]);
-                            return [
-                                ChatActions.sendMessageSuccess({ response: messageResponse }),
-                                ChatActions.loadChatList()
-                            ];
-                        }),
-                        catchError(error => of(ChatActions.sendMessageFailure({ error })))
+                    this.router.navigate(['/c', newChat.id]);
+                    
+                    return concat(
+                        timer(100).pipe(
+                            map(() => ChatActions.addOptimisticUserMessage({ content }))
+                        ),
+                        of(ChatActions.loadChatList()),
+                        
+                        this.chatService.sendMessage(newChat.id, content).pipe(
+                            map((response) => ChatActions.sendMessageSuccess({ response })),
+                            catchError((error) => of(ChatActions.sendMessageFailure({ error })))
+                        )
                     );
-                })
+                }),
+                catchError((error) => of(ChatActions.sendMessageFailure({ error })))
             );
         })
     ));

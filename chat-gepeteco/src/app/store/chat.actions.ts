@@ -57,3 +57,8 @@ export const createChatAndSendMessage = createAction(
         content: string 
     }>()
 );
+
+export const addOptimisticUserMessage = createAction(
+    '[Chat] Add Optimistic User Message',
+    props<{ content: string }>()
+);

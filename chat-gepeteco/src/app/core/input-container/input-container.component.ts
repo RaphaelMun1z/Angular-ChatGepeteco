@@ -38,16 +38,9 @@ export class InputContainerComponent {
     
     availableModels: ModelOption[] = [
         { 
-            id: 'pro', 
-            name: 'Gemini 1.5 Pro', 
-            description: 'Raciocínio complexo', 
-            icon: 'fa-bolt', 
-            iconColor: 'text-[#a8c7fa]' 
-        },
-        { 
             id: 'flash', 
-            name: 'Gemini 1.5 Flash', 
-            description: 'Rápido e leve', 
+            name: 'Gepeteco 1.0 Flash', 
+            description: 'Leve', 
             icon: 'fa-rocket', 
             iconColor: 'text-[#e3e3e3]' 
         }

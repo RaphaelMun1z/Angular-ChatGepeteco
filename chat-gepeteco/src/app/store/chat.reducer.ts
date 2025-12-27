@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { sendMessage, sendMessageSuccess, sendMessageFailure, loadMessages, loadMessagesSuccess, loadMessagesFailure, loadChatList, loadChatListSuccess, loadChatListFailure } from './chat.actions';
+import { sendMessage, sendMessageSuccess, sendMessageFailure, loadMessages, loadMessagesSuccess, loadMessagesFailure, loadChatList, loadChatListSuccess, loadChatListFailure, addOptimisticUserMessage } from './chat.actions';
 import { ChatMessage, ChatState } from '../models/chat.model';
 
 export const initialState: ChatState = {
@@ -87,13 +87,12 @@ export const chatReducer = createReducer(
         loading: true,
         error: null,
         currentChatTitle: null,
-        messages: []
+        messages: state.messages.filter(m => m.id === 'temp-id')
     })),
     
     on(loadMessagesSuccess, (state, { chatData }) => {
         const history: ChatMessage[] = chatData.messages.map(msg => {
             const senderType = (msg.sender === 'USER') ? 'user' : 'bot';
-            
             return {
                 id: msg.id,
                 text: msg.content,
@@ -103,12 +102,16 @@ export const chatReducer = createReducer(
             };
         });
         
+        const optimisticMessages = state.messages.filter(m => m.id === 'temp-id');
+        const hasFreshBotResponse = state.messages.some(m => m.sender === 'bot' && !m.isHistory);
+        const shouldKeepLoading = optimisticMessages.length > 0 && !hasFreshBotResponse;
+        
         return {
             ...state,
-            loading: false,
+            loading: shouldKeepLoading, 
             error: null,
             currentChatTitle: chatData.title,
-            messages: history
+            messages: [...history, ...optimisticMessages]
         };
     }),
     
@@ -122,18 +125,41 @@ export const chatReducer = createReducer(
     
     on(loadChatList, (state) => ({
         ...state,
+        loading: state.loading
+    })),
+    
+    on(loadChatListSuccess, (state, { chats }) => {
+        const hasPendingMessage = state.messages.some(m => m.id === 'temp-id');
+        
+        return {
+            ...state,
+            loading: hasPendingMessage ? true : false, 
+            chatList: chats
+        };
+    }),
+    
+    on(loadChatListFailure, (state, { error }) => {
+        const hasPendingMessage = state.messages.some(m => m.id === 'temp-id');
+        
+        return {
+            ...state,
+            loading: hasPendingMessage ? true : false,
+            error
+        };
+    }),
+    
+    on(addOptimisticUserMessage, (state, { content }) => ({
+        ...state,
+        messages: [
+            ...state.messages,
+            {
+                id: 'temp-id',
+                text: content,
+                sender: 'user' as const,
+                timestamp: new Date(),
+                isHistory: false
+            }
+        ],
         loading: true
     })),
-    
-    on(loadChatListSuccess, (state, { chats }) => ({
-        ...state,
-        loading: false,
-        chatList: chats
-    })),
-    
-    on(loadChatListFailure, (state, { error }) => ({
-        ...state,
-        loading: false,
-        error
-    }))
 );
