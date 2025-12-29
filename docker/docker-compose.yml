@@ -38,8 +38,7 @@ services:
     command: pull gemma3:1b
 
   back-spring:
-    build:
-      context: C:/temp/ws-intellij/ChatGepeteco
+    image: raphaelmuniz/chat-backend:latest
     container_name: Back-Spring
     env_file:
       - .env
@@ -59,8 +58,7 @@ services:
       - "8080:8080"
 
   front-angular:
-    build:
-      context: C:/Users/rapha/Desktop/IA-TRAB/chat-gepeteco
+    image: raphaelmuniz/chat-frontend:latest
     container_name: Front-Angular
     depends_on:
       - back-spring
