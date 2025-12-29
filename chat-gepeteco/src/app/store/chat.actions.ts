@@ -13,7 +13,7 @@ export const sendMessage = createAction(
 
 export const sendMessageSuccess = createAction(
     '[Chat] Send Message Success',
-    props<{ response: MessageResponseDto }>()
+    props<{ response: MessageResponseDto, chatId: string }>()
 );
 
 export const sendMessageFailure = createAction(

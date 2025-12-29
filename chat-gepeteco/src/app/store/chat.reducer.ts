@@ -15,6 +15,9 @@ export const initialState: ChatState = {
     messages: [],
     currentChatTitle: null,
     chatList: [],
+    currentChatId: null,
+    optimisticQueue: [],
+    pendingChatIds: [],
     
     // Contexto: Sidebar
     sidebarLoading: false,
@@ -34,31 +37,53 @@ export const chatReducer = createReducer(
     // =================================================================
     
     // Adiciona msg temporária do usuário e ativa loading do CHAT
-    on(sendMessage, (state, { payload }) => ({
-        ...state,
-        activeChatLoading: true, 
-        activeChatError: null,
-        messages: [...state.messages, {
+    on(sendMessage, (state, { payload }) => {
+        const tempMsg: ChatMessage = {
             id: `temp-${Date.now()}`,
             text: payload.content,
             sender: 'user' as const,
-            timestamp: new Date()
-        }]
-    })),
+            timestamp: new Date(),
+            chatId: payload.chatId
+        };
+        
+        return {
+            ...state,
+            activeChatLoading: true,
+            activeChatError: null,
+            pendingChatIds: [...new Set([...state.pendingChatIds, payload.chatId])],
+            optimisticQueue: [...state.optimisticQueue, tempMsg],
+            messages: [...state.messages, tempMsg]
+        };
+    }),
     
     // Recebe resposta do Bot, remove loading do CHAT
-    on(sendMessageSuccess, (state, { response }) => ({
-        ...state,
-        activeChatLoading: false,
-        activeChatError: null,
-        messages: [...state.messages, {
-            id: response.id,
-            text: response.content,
-            sender: 'bot' as const,
-            timestamp: new Date(response.createdAt),
-            isHistory: false
-        }]
-    })),
+    on(sendMessageSuccess, (state, { response, chatId }) => {
+        const updatedPendingIds = state.pendingChatIds.filter(id => id !== chatId);
+        const updatedQueue = state.optimisticQueue.filter(m => m.chatId !== chatId);
+        
+        if (state.currentChatId !== chatId) {
+            return {
+                ...state,
+                pendingChatIds: updatedPendingIds,
+                optimisticQueue: updatedQueue
+            };
+        }
+        
+        return {
+            ...state,
+            activeChatLoading: false,
+            activeChatError: null,
+            pendingChatIds: updatedPendingIds,
+            optimisticQueue: updatedQueue,
+            messages: [...state.messages, {
+                id: response.id,
+                text: response.content,
+                sender: 'bot' as const,
+                timestamp: new Date(response.createdAt),
+                isHistory: false
+            }]
+        };
+    }),
     
     // Trata erro de envio (específico do chat)
     on(sendMessageFailure, (state, { error }) => {
@@ -70,7 +95,13 @@ export const chatReducer = createReducer(
         return {
             ...state,
             activeChatLoading: false,
-            activeChatError: error, // Grava no erro do Chat
+            activeChatError: error,
+            pendingChatIds: state.currentChatId 
+            ? state.pendingChatIds.filter(id => id !== state.currentChatId) 
+            : state.pendingChatIds,
+            optimisticQueue: state.currentChatId 
+            ? state.optimisticQueue.filter(m => m.chatId !== state.currentChatId)
+            : state.optimisticQueue,
             messages: [...state.messages, {
                 id: `err-${Date.now()}`,
                 text: `❌ ${errorText}`,
@@ -82,12 +113,13 @@ export const chatReducer = createReducer(
     }),
     
     // Limpa mensagens antigas, mantém otimista, liga loading do CHAT
-    on(loadMessages, (state) => ({
+    on(loadMessages, (state, { chatId }) => ({
         ...state,
         activeChatLoading: true,
         activeChatError: null,
         currentChatTitle: null,
-        messages: state.messages.filter((m: ChatMessage) => m.id === 'temp-id')
+        currentChatId: chatId,
+        messages: []
     })),
     
     // Carrega histórico
@@ -100,18 +132,20 @@ export const chatReducer = createReducer(
             isHistory: true
         } as ChatMessage));
         
-        const optimisticMessages = state.messages.filter((m: ChatMessage) => m.id === 'temp-id');
-        const hasFreshBotResponse = state.messages.some((m: ChatMessage) => m.sender === 'bot' && !m.isHistory);
+        const pendingForThisChat = state.optimisticQueue.filter(
+            m => m.chatId === chatData.id
+        );
         
-        // Lógica inteligente apenas para o loading do Chat
-        const shouldKeepLoading = optimisticMessages.length > 0 && !hasFreshBotResponse;
+        const isBackendProcessing = state.pendingChatIds.includes(chatData.id);
+        const shouldKeepLoading = pendingForThisChat.length > 0 || isBackendProcessing;
         
         return {
             ...state,
             activeChatLoading: shouldKeepLoading,
             activeChatError: null,
             currentChatTitle: chatData.title,
-            messages: [...history, ...optimisticMessages]
+            currentChatId: chatData.id,
+            messages: [...history, ...pendingForThisChat]
         };
     }),
     
@@ -169,6 +203,7 @@ export const chatReducer = createReducer(
         ...state,
         messages: [],
         currentChatTitle: null,
+        currentChatId: null,
         activeChatLoading: false,
         activeChatError: null
     })),

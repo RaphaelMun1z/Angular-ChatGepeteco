@@ -23,7 +23,10 @@ export class ChatEffects {
             ofType(ChatActions.sendMessage),
             mergeMap(({ payload }) =>
                 this.chatService.sendMessage(payload.chatId, payload.content).pipe(
-                    map(response => ChatActions.sendMessageSuccess({ response })),
+                    map(response => ChatActions.sendMessageSuccess({ 
+                        response, 
+                        chatId: payload.chatId 
+                    })),
                     catchError(error => of(ChatActions.sendMessageFailure({ error })))
                 )
             )
@@ -86,7 +89,7 @@ export class ChatEffects {
                             
                             // Envia a mensagem real para a IA
                             this.chatService.sendMessage(newChat.id, content).pipe(
-                                map((response) => ChatActions.sendMessageSuccess({ response })),
+                                map((response) => ChatActions.sendMessageSuccess({ response, chatId: newChat.id })),
                                 catchError((error) => of(ChatActions.sendMessageFailure({ error })))
                             )
                         );

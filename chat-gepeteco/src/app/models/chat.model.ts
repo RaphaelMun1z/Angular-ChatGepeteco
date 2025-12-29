@@ -70,10 +70,16 @@ export type ApiError = HttpErrorResponse;
 /** Estado Global do Chat */
 export interface ChatState {
     messages: ChatMessage[];
+    optimisticQueue: ChatMessage[];
+    pendingChatIds: string[];
+
     currentChatTitle: string | null;
+    currentChatId: string | null;
     chatList: ChatSummaryDto[];
+
     sidebarLoading: boolean; 
     sidebarError: ApiError | null;
+
     activeChatLoading: boolean;
     activeChatError: ApiError | null;
 }
