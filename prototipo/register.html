@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - Gemini 2.0</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            gradientStart: '#2563eb',
+                            gradientEnd: '#9333ea',
+                        },
+                        dark: {
+                            bg: '#131314',
+                            surface: '#1E1F20',
+                            input: '#282a2c',
+                            border: '#3c4043'
+                        }
+                    },
+                    animation: {
+                        'fade-in-right': 'fadeInRight 0.3s ease-out forwards',
+                        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+                    },
+                    keyframes: {
+                        fadeInRight: {
+                            '0%': { opacity: '0', transform: 'translateX(10px)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' },
+                        },
+                        shake: {
+                            '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+                            '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+                            '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+                            '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .step-active {
+            @apply bg-brand-600 text-white border-brand-600;
+        }
+        .step-inactive {
+            @apply bg-gray-200 text-gray-500 border-gray-200 dark:bg-dark-input dark:text-gray-400 dark:border-dark-border;
+        }
+        .input-error {
+            @apply border-red-500 ring-1 ring-red-500 !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-dark-bg text-gray-800 dark:text-gray-100 transition-colors duration-300 min-h-screen flex items-center justify-center p-4 relative overflow-y-auto">
+
+    <!-- Theme Toggle -->
+    <button onclick="toggleTheme()" class="absolute top-6 right-6 w-10 h-10 rounded-full flex items-center justify-center bg-white/50 dark:bg-dark-surface/50 backdrop-blur-sm border border-gray-200 dark:border-dark-border text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-input transition-all z-20">
+        <i id="theme-icon" class="fa-regular fa-sun"></i>
+    </button>
+
+    <!-- Main Card -->
+    <main class="w-full max-w-lg bg-white dark:bg-dark-surface rounded-3xl shadow-lg border border-gray-100 dark:border-dark-border p-6 md:p-8 relative z-10 my-10">
+        
+        <!-- Header & Progress Bar -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-center mb-6">Criar sua conta</h1>
+            
+            <!-- Steps Indicator -->
+            <div class="flex items-start justify-between relative px-2">
+                <!-- 
+                    CORREÇÃO DA LINHA:
+                    - top-4: Alinha com o centro da bolinha de 32px (h-8 = 2rem, metade = 1rem = top-4)
+                    - transform -translate-y-1/2: Centraliza a espessura da linha
+                    - z-0: Garante que a linha fique atrás dos números
+                -->
+                <div class="absolute left-0 top-4 transform -translate-y-1/2 w-full h-1 bg-gray-200 dark:bg-dark-border z-0 rounded-full"></div>
+                <div id="progress-line" class="absolute left-0 top-4 transform -translate-y-1/2 h-1 bg-brand-600 transition-all duration-300 rounded-full z-0" style="width: 0%"></div>
+
+                <!-- Step 1 (Adicionado relative e z-10 para ficar sobre a linha) -->
+                <div class="flex flex-col items-center gap-2 bg-white dark:bg-dark-surface px-2 relative z-10">
+                    <div id="step-indicator-1" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors duration-300 step-active">1</div>
+                    <span class="text-[10px] font-medium uppercase tracking-wider text-brand-600">Dados</span>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="flex flex-col items-center gap-2 bg-white dark:bg-dark-surface px-2 relative z-10">
+                    <div id="step-indicator-2" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors duration-300 step-inactive">2</div>
+                    <span class="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Plano</span>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex flex-col items-center gap-2 bg-white dark:bg-dark-surface px-2 relative z-10">
+                    <div id="step-indicator-3" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors duration-300 step-inactive">3</div>
+                    <span class="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Fim</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <form id="signup-form" onsubmit="return false;" onkeydown="return event.key != 'Enter' || currentStep == 3;">
+            
+            <!-- STEP 1: Account Info -->
+            <div id="step-1-content" class="space-y-4 animate-fade-in-right">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wide ml-1">Nome Completo</label>
+                    <input type="text" id="name" class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-input border border-gray-200 dark:border-dark-border rounded-xl focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all text-gray-800 dark:text-gray-100" placeholder="Seu nome">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wide ml-1">E-mail</label>
+                    <input type="email" id="email" class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-input border border-gray-200 dark:border-dark-border rounded-xl focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all text-gray-800 dark:text-gray-100" placeholder="nome@exemplo.com">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wide ml-1">Senha</label>
+                        <input type="password" id="password" class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-input border border-gray-200 dark:border-dark-border rounded-xl focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all text-gray-800 dark:text-gray-100" placeholder="******">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wide ml-1">Confirmar</label>
+                        <input type="password" id="confirm-password" class="w-full px-4 py-3 bg-gray-50 dark:bg-dark-input border border-gray-200 dark:border-dark-border rounded-xl focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all text-gray-800 dark:text-gray-100" placeholder="******">
+                    </div>
+                </div>
+                <div id="step-1-error" class="text-red-500 text-xs text-center hidden">Preencha todos os campos corretamente.</div>
+            </div>
+
+            <!-- STEP 2: Select Plan -->
+            <div id="step-2-content" class="space-y-4 hidden">
+                <p class="text-sm text-center text-gray-500 dark:text-gray-400 mb-4">Escolha como você quer começar.</p>
+                
+                <!-- Plan Options -->
+                <div class="space-y-3">
+                    <!-- Free Plan -->
+                    <label class="relative flex items-center p-4 border border-gray-200 dark:border-dark-border rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-dark-input transition-all group">
+                        <input type="radio" name="plan" value="free" class="peer sr-only" checked>
+                        <div class="absolute inset-0 rounded-2xl border-2 border-transparent peer-checked:border-brand-500 peer-checked:bg-brand-50/50 dark:peer-checked:bg-brand-500/10 pointer-events-none transition-all"></div>
+                        
+                        <div class="flex-1 z-10">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-gray-900 dark:text-white">Explorador</span>
+                                <span class="text-sm font-bold text-gray-500">R$ 0</span>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Acesso básico ao Gemini 1.5 Flash.</p>
+                        </div>
+                        <div class="ml-4 z-10">
+                            <div class="w-5 h-5 rounded-full border border-gray-300 dark:border-gray-600 peer-checked:bg-brand-500 peer-checked:border-brand-500 flex items-center justify-center">
+                                <i class="fa-solid fa-check text-white text-[10px] opacity-0 peer-checked:opacity-100"></i>
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- Pro Plan -->
+                    <label class="relative flex items-center p-4 border border-brand-200 dark:border-brand-900/30 rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-dark-input transition-all">
+                        <input type="radio" name="plan" value="pro" class="peer sr-only">
+                        <div class="absolute inset-0 rounded-2xl border-2 border-transparent peer-checked:border-brand-500 peer-checked:bg-brand-50/50 dark:peer-checked:bg-brand-500/10 pointer-events-none transition-all"></div>
+                        <div class="absolute top-0 right-0 -mt-2 -mr-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-20">POPULAR</div>
+
+                        <div class="flex-1 z-10">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-brand-600 dark:text-brand-400">Inovador</span>
+                                <span class="text-sm font-bold text-gray-900 dark:text-white">R$ 49<span class="text-xs font-normal text-gray-500">/mês</span></span>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Gemini 1.5 Pro, Imagens HD, Contexto 1M.</p>
+                        </div>
+                        <div class="ml-4 z-10">
+                            <div class="w-5 h-5 rounded-full border border-gray-300 dark:border-gray-600 peer-checked:bg-brand-500 peer-checked:border-brand-500 flex items-center justify-center">
+                                <i class="fa-solid fa-check text-white text-[10px] opacity-0 peer-checked:opacity-100"></i>
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- Team Plan -->
+                    <label class="relative flex items-center p-4 border border-gray-200 dark:border-dark-border rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-dark-input transition-all">
+                        <input type="radio" name="plan" value="team" class="peer sr-only">
+                        <div class="absolute inset-0 rounded-2xl border-2 border-transparent peer-checked:border-brand-500 peer-checked:bg-brand-50/50 dark:peer-checked:bg-brand-500/10 pointer-events-none transition-all"></div>
+                        
+                        <div class="flex-1 z-10">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-semibold text-gray-900 dark:text-white">Equipe</span>
+                                <span class="text-sm font-bold text-gray-500">R$ 99<span class="text-xs font-normal">/user</span></span>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Gestão centralizada e suporte 24/7.</p>
+                        </div>
+                        <div class="ml-4 z-10">
+                            <div class="w-5 h-5 rounded-full border border-gray-300 dark:border-gray-600 peer-checked:bg-brand-500 peer-checked:border-brand-500 flex items-center justify-center">
+                                <i class="fa-solid fa-check text-white text-[10px] opacity-0 peer-checked:opacity-100"></i>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- STEP 3: Review & Terms -->
+            <div id="step-3-content" class="space-y-6 hidden">
+                <div class="bg-gray-50 dark:bg-dark-input/50 rounded-xl p-4 border border-gray-100 dark:border-dark-border text-center">
+                    <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-regular fa-id-card text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-gray-900 dark:text-white">Quase lá, <span id="summary-name" class="font-bold">Usuário</span>!</h3>
+                    <p class="text-xs text-gray-500 mt-1">Plano selecionado: <span id="summary-plan" class="font-semibold text-brand-600 dark:text-brand-400">Explorador</span></p>
+                </div>
+
+                <!-- Terms Checkbox -->
+                <div class="flex items-start gap-3">
+                    <div class="flex items-center h-5">
+                        <input id="terms" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-dark-border dark:bg-dark-input dark:focus:ring-offset-dark-surface">
+                    </div>
+                    <label for="terms" class="text-xs text-gray-500 dark:text-gray-400 cursor-pointer">
+                        Eu concordo com os <a href="#" class="text-brand-600 dark:text-blue-400 hover:underline">Termos de Serviço</a> e autorizo o processamento dos meus dados.
+                    </label>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex gap-3 mt-8">
+                <button type="button" id="prev-btn" onclick="prevStep()" class="hidden px-5 py-3 rounded-xl border border-gray-200 dark:border-dark-border text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-dark-input font-medium transition-colors">
+                    Voltar
+                </button>
+                
+                <button type="button" id="next-btn" onclick="nextStep()" class="flex-1 py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-xl shadow-md flex items-center justify-center gap-2 transition-all active:scale-95">
+                    <span id="next-btn-text">Continuar</span>
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </button>
+            </div>
+
+        </form>
+
+        <!-- Footer -->
+        <div class="mt-6 text-center">
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+                Já tem uma conta? 
+                <a href="login.html" class="font-medium text-brand-600 dark:text-blue-400 hover:underline">Entrar</a>
+            </p>
+        </div>
+    </main>
+
+    <!-- Logic -->
+    <script>
+        // --- Theme Logic ---
+        const html = document.documentElement;
+        const themeIcon = document.getElementById('theme-icon');
+
+        function initTheme() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                html.classList.add('dark');
+                updateThemeIcon(true);
+            } else {
+                html.classList.remove('dark');
+                updateThemeIcon(false);
+            }
+        }
+        function toggleTheme() {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.theme = 'light';
+                updateThemeIcon(false);
+            } else {
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
+                updateThemeIcon(true);
+            }
+        }
+        function updateThemeIcon(isDark) {
+            themeIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+
+        // --- Wizard Logic ---
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function updateUI() {
+            // Update Content Visibility
+            for (let i = 1; i <= totalSteps; i++) {
+                const el = document.getElementById(`step-${i}-content`);
+                if (i === currentStep) {
+                    el.classList.remove('hidden');
+                    el.classList.add('animate-fade-in-right');
+                } else {
+                    el.classList.add('hidden');
+                    el.classList.remove('animate-fade-in-right');
+                }
+            }
+
+            // Update Progress Indicators
+            const progressLine = document.getElementById('progress-line');
+            const percent = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressLine.style.width = `${percent}%`;
+
+            for (let i = 1; i <= totalSteps; i++) {
+                const indicator = document.getElementById(`step-indicator-${i}`);
+                if (i <= currentStep) {
+                    indicator.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors duration-300 step-active";
+                } else {
+                    indicator.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors duration-300 step-inactive";
+                }
+            }
+
+            // Update Buttons
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtnText = document.getElementById('next-btn-text');
+
+            if (currentStep === 1) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+
+            if (currentStep === totalSteps) {
+                nextBtnText.textContent = "Criar Conta";
+            } else {
+                nextBtnText.textContent = "Continuar";
+            }
+        }
+
+        function showError(msg) {
+            const errEl = document.getElementById('step-1-error');
+            errEl.textContent = msg;
+            errEl.classList.remove('hidden');
+            
+            // Add shake animation to the current container
+            const container = document.getElementById(`step-${currentStep}-content`);
+            container.classList.remove('animate-fade-in-right');
+            container.classList.add('animate-shake');
+            setTimeout(() => container.classList.remove('animate-shake'), 500);
+        }
+
+        function validateStep1() {
+            const fields = ['name', 'email', 'password', 'confirm-password'];
+            let isValid = true;
+            
+            // Clear previous errors
+            document.getElementById('step-1-error').classList.add('hidden');
+            fields.forEach(id => document.getElementById(id).classList.remove('input-error'));
+
+            // Check Empty
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el.value.trim()) {
+                    el.classList.add('input-error');
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                showError("Por favor, preencha todos os campos.");
+                return false;
+            }
+
+            // Check Passwords
+            const pass = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm-password').value;
+            
+            if (pass !== confirm) {
+                document.getElementById('confirm-password').classList.add('input-error');
+                showError("As senhas não coincidem.");
+                return false;
+            }
+            if (pass.length < 6) {
+                document.getElementById('password').classList.add('input-error');
+                showError("A senha deve ter pelo menos 6 caracteres.");
+                return false;
+            }
+
+            return true;
+        }
+
+        // Global function to ensure access from HTML
+        window.nextStep = function() {
+            if (currentStep === 1) {
+                if (!validateStep1()) return;
+                
+                // Pre-fill summary safely
+                const nameVal = document.getElementById('name').value;
+                if(nameVal) document.getElementById('summary-name').textContent = nameVal.split(' ')[0];
+            }
+
+            if (currentStep === 2) {
+                // Update summary plan name
+                const selectedPlan = document.querySelector('input[name="plan"]:checked')?.value || 'free';
+                const planNames = { 'free': 'Explorador (Grátis)', 'pro': 'Inovador (R$ 49/mês)', 'team': 'Equipe (R$ 99/mês)' };
+                document.getElementById('summary-plan').textContent = planNames[selectedPlan];
+            }
+
+            if (currentStep === 3) {
+                handleSignup();
+                return;
+            }
+
+            currentStep++;
+            updateUI();
+        }
+
+        window.prevStep = function() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        function handleSignup() {
+            const terms = document.getElementById('terms');
+            if(!terms.checked) {
+                alert("Você precisa aceitar os termos para continuar.");
+                return;
+            }
+
+            const nextBtn = document.getElementById('next-btn');
+            const nextBtnText = document.getElementById('next-btn-text');
+            
+            nextBtn.disabled = true;
+            nextBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            nextBtnText.textContent = 'Processando...';
+
+            setTimeout(() => {
+                alert("Conta criada com sucesso! Redirecionando para o login...");
+                window.location.href = 'login.html';
+            }, 1500);
+        }
+
+        // Initialize
+        initTheme();
+        updateUI();
+    </script>
+</body>
+</html>

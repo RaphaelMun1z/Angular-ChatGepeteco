@@ -1,0 +1,55 @@
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+/* Typing Indicator Dots */
+.typing-dot {
+    animation: typingBounce 1.4s infinite ease-in-out both;
+}
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingBounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+/* Markdown-like styling for bot messages */
+.prose p { margin-bottom: 0.75rem; }
+.prose p:last-child { margin-bottom: 0; }
+.prose pre { 
+    background-color: #f1f5f9; 
+    padding: 1rem; 
+    border-radius: 0.5rem; 
+    overflow-x: auto; 
+    font-family: monospace;
+    margin: 0.5rem 0;
+}
+.dark .prose pre { background-color: #282a2c; }
+.prose code { 
+    background-color: #e2e8f0; 
+    padding: 0.2rem 0.4rem; 
+    border-radius: 0.25rem; 
+    font-family: monospace; 
+    font-size: 0.9em;
+}
+.dark .prose code { background-color: #374151; }
+.prose strong { font-weight: 600; }

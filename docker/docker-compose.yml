@@ -1,0 +1,72 @@
+services:
+  bd-postgres:
+    image: postgres:15
+    container_name: BD-Postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  ia-ollama:
+    image: ollama/ollama
+    container_name: IA-Ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    healthcheck:
+      test: "ollama list || exit 1"
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
+
+  ollama-pull-model:
+    image: ollama/ollama
+    container_name: ollama-pull-model
+    depends_on:
+      ia-ollama:
+        condition: service_healthy
+    environment:
+      - OLLAMA_HOST=http://ia-ollama:11434
+    command: pull gemma3:1b
+
+  back-spring:
+    build:
+      context: C:/temp/ws-intellij/ChatGepeteco
+    container_name: Back-Spring
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      CORS_ORIGINS: http://localhost:4200
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      PASSWORD_ENCODER_SECRET: ${JWT_SECRET}
+    depends_on:
+      - bd-postgres
+      - ia-ollama
+      - ollama-pull-model
+    ports:
+      - "8080:8080"
+
+  front-angular:
+    build:
+      context: C:/Users/rapha/Desktop/IA-TRAB/chat-gepeteco
+    container_name: Front-Angular
+    depends_on:
+      - back-spring
+    ports:
+      - "4200:80"
+
+volumes:
+  pgdata:
+  ollama:
