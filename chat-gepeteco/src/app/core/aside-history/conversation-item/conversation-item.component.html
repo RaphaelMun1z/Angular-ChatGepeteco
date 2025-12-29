@@ -1,26 +1,58 @@
-<button [routerLink]="route"
-   class="w-full flex items-center gap-3 py-2 rounded-full text-sm group transition-colors h-[40px] shrink-0"
-   [ngClass]="isActive 
+<div (click)="navigate()"
+     class="group relative w-full flex items-center gap-3 py-2 rounded-full text-sm transition-colors h-10 shrink-0 cursor-pointer select-none"
+     [ngClass]="isActive 
         ? 'bg-[#c2e7ff] text-[#001d35] dark:bg-[#004a77] dark:text-[#c2e7ff] font-medium' 
         : 'hover:bg-gray-200 dark:hover:bg-[#333537] text-gray-700 dark:text-gray-200'"
-   [class.px-3]="!isCollapsed"
-   [class.justify-center]="isCollapsed"
-   [class.justify-between]="!isCollapsed">
+     [class.px-3]="!isCollapsed"
+     [class.justify-center]="isCollapsed"
+     [class.justify-between]="!isCollapsed">
 
-   <div class="flex items-center gap-3 overflow-hidden">
-       <i *ngIf="isCollapsed" class="fa-regular fa-message" 
-          [ngClass]="isActive ? 'text-[#001d35] dark:text-[#c2e7ff]' : 'text-gray-500 dark:text-gray-400'"></i>
-       
-       <span *ngIf="!isCollapsed" class="truncate pr-2">{{ title }}</span>
-   </div>
+    <div class="flex items-center gap-3 overflow-hidden flex-1">
+        <i *ngIf="isCollapsed" class="fa-regular fa-message shrink-0" 
+           [ngClass]="isActive ? 'text-[#001d35] dark:text-[#c2e7ff]' : 'text-gray-500 dark:text-gray-400'"></i>
+        
+        <i *ngIf="!isCollapsed" class="fa-regular fa-message shrink-0"
+           [ngClass]="isActive ? 'text-[#001d35] dark:text-[#c2e7ff]' : 'text-gray-500 dark:text-gray-400'"></i>
 
-   <ng-container *ngIf="!isCollapsed">
+        <span *ngIf="!isCollapsed" class="truncate pr-2">{{ title }}</span>
+    </div>
+
+    <ng-container *ngIf="!isCollapsed">
+        
         <i *ngIf="isPinned" class="fa-solid fa-thumbtack text-[10px] text-gray-500 dark:text-gray-400 opacity-100 shrink-0"></i>
 
-        <i *ngIf="!isPinned" class="fa-solid fa-ellipsis-vertical text-xs opacity-0 group-hover:opacity-100 shrink-0"
-           [ngClass]="isActive 
-                ? 'text-[#001d35] dark:text-[#c2e7ff]' 
-                : 'text-gray-500 dark:text-gray-400'"></i>
-   </ng-container>
+        <div *ngIf="!isPinned" class="relative shrink-0 flex items-center">
+            
+            <button (click)="toggleMenu($event)"
+                    class="w-6 h-6 rounded-full flex items-center justify-center hover:bg-gray-300/50 dark:hover:bg-gray-600/50 transition-colors opacity-0 group-hover:opacity-100"
+                    [class.opacity-100]="isMenuOpen">
+                <i class="fa-solid fa-ellipsis-vertical text-xs"
+                   [ngClass]="isActive ? 'text-[#001d35] dark:text-[#c2e7ff]' : 'text-gray-500 dark:text-gray-400'"></i>
+            </button>
 
-</button>
+            <div *ngIf="isMenuOpen" 
+                 class="absolute right-0 top-7 z-50 w-32 bg-white dark:bg-[#1e1f20] 
+                        rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 overflow-hidden">
+                
+                <button (click)="onRename($event)"
+                        class="w-full text-left px-4 py-2 text-xs flex items-center gap-2 
+                               text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#333537]">
+                    <i class="fa-solid fa-pen"></i> Renomear
+                </button>
+                
+                <button (click)="onDelete($event)"
+                        class="w-full text-left px-4 py-2 text-xs flex items-center gap-2 
+                               text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                    <i class="fa-regular fa-trash-can"></i> Excluir
+                </button>
+            </div>
+        </div>
+
+    </ng-container>
+
+    <div *ngIf="isMenuOpen" 
+         (click)="closeMenu($event)" 
+         class="fixed inset-0 z-40 cursor-default">
+    </div>
+
+</div>

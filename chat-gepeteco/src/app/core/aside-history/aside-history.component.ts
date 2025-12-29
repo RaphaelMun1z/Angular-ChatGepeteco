@@ -6,9 +6,9 @@ import { UiService } from '../../services/ui.service';
 import { ConversationItemComponent } from "./conversation-item/conversation-item.component";
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { ChatListItem } from '../../models/chat.model';
-import { selectChatList } from '../../store/chat.selectors';
-import { loadChatList } from '../../store/chat.actions';
+import { ChatSummaryDto } from '../../models/chat.model';
+import { selectChatList, selectSidebarError, selectSidebarLoading } from '../../store/chat.selectors';
+import { deleteChat, loadChatList, renameChat } from '../../store/chat.actions';
 
 @Component({
     selector: 'app-aside-history',
@@ -21,10 +21,45 @@ export class AsideHistoryComponent implements OnInit {
     private store = inject(Store);
     public uiService = inject(UiService);
     
-    chats$: Observable<ChatListItem[]> = this.store.select(selectChatList);
+    chats$: Observable<ChatSummaryDto[]> = this.store.select(selectChatList);
+    isLoading$: Observable<boolean> = this.store.select(selectSidebarLoading); 
+    error$: Observable<any> = this.store.select(selectSidebarError);          
     
     ngOnInit() {
+        this.loadChats();
+    }
+    
+    loadChats() {
         this.store.dispatch(loadChatList());
+    }
+    
+    // --- AÇÕES DO USUÁRIO ---
+    
+    onDeleteChat(chatId: string) {
+        if (confirm('Tem certeza que deseja excluir esta conversa?')) {
+            this.store.dispatch(deleteChat({ chatId }));
+        }
+    }
+    
+    onRenameChat(chatId: string, currentTitle: string) {
+        const newTitle = prompt('Novo título da conversa:', currentTitle);
+        if (newTitle && newTitle.trim() !== '' && newTitle !== currentTitle) {
+            this.store.dispatch(renameChat({ chatId, title: newTitle }));
+        }
+    }
+    
+    // --- AUXILIARES ---
+    
+    getErrorDetails(error: any) {
+        if (!error) return { message: '', icon: '' };
+        if (error.status === 0 || error.status === 503) return { message: 'Servidor indisponível', icon: 'fa-solid fa-plug-circle-xmark' };
+        if (error.status === 401 || error.status === 403) return { message: 'Sessão expirada', icon: 'fa-solid fa-user-lock' };
+        return { message: 'Erro ao carregar', icon: 'fa-solid fa-triangle-exclamation' };
+    }
+    
+    // Seus itens estáticos (Gems, MyItems) continuam aqui...
+    toggleMenu() { 
+        this.uiService.toggleSidebar();
     }
     
     myItems = [
@@ -52,12 +87,4 @@ export class AsideHistoryComponent implements OnInit {
             colorClass: 'text-purple-600 dark:text-purple-400'
         }
     ];
-    
-    toggleMenu() {
-        this.toggleSb(); 
-    }
-    
-    toggleSb() {
-        this.uiService.toggleSidebar();
-    }
 }

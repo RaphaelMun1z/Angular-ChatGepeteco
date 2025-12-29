@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs';
-import { selectError, selectIsLoading, selectMessages } from '../../store/chat.selectors';
+import { map, Observable } from 'rxjs';
+import { selectActiveChatError, selectActiveChatLoading, selectMessages } from '../../store/chat.selectors';
 import { MsgContainerViewComponent } from "../chat/msg-container-view/msg-container-view.component";
 import { MsgLoadingComponent } from "../chat/msg-loading/msg-loading.component";
 import { InputContainerComponent } from '../input-container/input-container.component';
 import { ActivatedRoute } from '@angular/router';
-import { loadMessages } from '../../store/chat.actions';
+import { clearChatState, loadMessages } from '../../store/chat.actions';
+import { ChatMessage } from '../../models/chat.model';
 
 @Component({
     selector: 'app-chat-box',
@@ -16,23 +17,21 @@ import { loadMessages } from '../../store/chat.actions';
     styleUrl: './chat-box.component.css'
 })
 
-export class ChatBoxComponent {
+export class ChatBoxComponent implements OnInit, AfterViewInit, OnDestroy{
     @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
-    
     private mutationObserver: MutationObserver | null = null;
     
     private store = inject(Store);
     private route = inject(ActivatedRoute);
     
-    messages$ = this.store.select(selectMessages);
-    isLoading$ = this.store.select(selectIsLoading);
-    error$ = this.store.select(selectError);
+    // Seletores específicos do Chat Ativo
+    messages$: Observable<ChatMessage[]> = this.store.select(selectMessages);
+    isLoading$: Observable<boolean> = this.store.select(selectActiveChatLoading);
+    error$: Observable<any> = this.store.select(selectActiveChatError);      
     
     chatId: string = '';
     
-    hasMessages$ = this.messages$.pipe(
-        map(msgs => msgs.length > 0)
-    );
+    hasMessages$ = this.messages$.pipe(map(msgs => msgs.length > 0));
     
     ngOnInit(): void {
         this.route.paramMap.subscribe(params => {
@@ -44,14 +43,17 @@ export class ChatBoxComponent {
         });
     }
     
-    ngAfterViewInit() {
-        this.initAutoScroll();
-    }
-    
     ngOnDestroy() {
         if (this.mutationObserver) {
             this.mutationObserver.disconnect();
         }
+        
+        this.store.dispatch(clearChatState());
+    }
+    
+    // Lógica de Scroll e Observer
+    ngAfterViewInit() {
+        this.initAutoScroll();
     }
     
     private initAutoScroll() {
